@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+	
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/template_publico.xhtml">
+	
+	<ui:define name="conteudo">
+		
+		<div class="jumbotron">
+	      <div class="container">
+	        <h1>Bem-vindo!</h1>
+	        <p>
+	        	Aprenda se divertindo! Comece hoje mesmo a programar animações e efeitos 
+	        	para os cubos de LED do IMD-UFRN.
+	        </p>
+	        <p><a class="btn btn-primary btn-lg" href="sobre.xhtml" role="button">Saiba mais</a></p>
+	      </div>
+	    </div>
+	    
+	    <div class="container">
+	    	<h2>Cadastre-se</h2>
+	    	
+	    	<h:form prependId="false">
+		    	<div class="row">
+			    	<div class="col-md-6">
+			    		<p:inputText styleClass="form-control" value="#{loginMBean.usuarioCadastro.pessoa.nome}" 
+					  			required="true" requiredMessage="Campo Nome Obrigatório" size="40"
+					  			placeholder="Nome"/>
+			    	</div>
+			        <div class="col-md-6">
+			        	<p:inputText styleClass="form-control" value="#{loginMBean.usuarioCadastro.pessoa.sobrenome}" 
+					  			required="true" requiredMessage="Campo Sobrenome Obrigatório" size="40"
+					  			placeholder="Sobrenome"/>
+			        </div>
+			    </div>
+			    
+			    <br/>
+			    
+			    <div class="row">
+			    	<div class="col-md-6">
+			    		<p:inputText styleClass="form-control" value="#{loginMBean.usuarioCadastro.email}" 
+				  			required="true" requiredMessage="Campo Email Obrigatório" size="40"
+				  			placeholder="Email" validatorMessage="O email informado é inválido.">
+				  			<f:validateLength minimum="4"/>
+			  			</p:inputText>
+			    	</div>
+			        <div class="col-md-6">
+			        	<p:calendar value="#{loginMBean.usuarioCadastro.pessoa.dataNascimento}" mask="99/99/9999" navigator="true"
+							required="true" requiredMessage="Campo Data de Nascimento Obrigatório" size="14" pattern="dd/MM/yyyy" 
+							yearRange="c-100:c" id="dataNascimento" placeholder="Nascimento" style="width: 100%;"/>
+			        </div>
+			    </div>
+			    
+			    <br/>
+			    
+			     <p:commandButton value="Continuar »" styleClass="btn btn-primary"
+						action="#{cadastroUsuariosMBean.entrarCadastroUsuarios(loginMBean.usuarioCadastro)}" 
+						ajax="false"/>
+			    
+			    <script>
+			    	resolverConflitoBootstrap("dataNascimento_input", "addonDataNascimento");
+			    </script>
+		    </h:form>
+	    </div>
+	</ui:define>
+
+</ui:composition>

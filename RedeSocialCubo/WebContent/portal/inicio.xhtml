@@ -1,0 +1,232 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE ui:composition PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/template_autenticado.xhtml">
+	
+	<ui:define name="conteudo">
+		<script src="/${ctx}/resources/js/jquery.dotdotdot.min.js"></script>
+		
+		<h:outputText value="#{timelineMBean.carregarCodigos}" id="carregarCodigos"/>
+		
+		<div class="container">
+			<h:form prependId="false">
+				<br/>
+				<div class="form-group row">
+					<div class="${timelineMBean.timelineNormal ? 'col-md-5' : 'col-md-4'}">
+						<div class="input-group">
+							<span class="input-group-addon" id="addonFitrar">Filtrar por Título</span>
+				
+							<p:inputText styleClass="form-control"
+								value="#{timelineMBean.tituloBusca}" size="40"
+								aria-describedby="addonFiltrar" 
+								id="tituloBusca"/>
+						</div>
+					</div>
+					
+					<h:panelGroup rendered="#{timelineMBean.meusCodigosPublicados or timelineMBean.meusRascunhos}">
+						<div class="col-md-3">
+							<div class="input-group">
+								<span class="input-group-addon" id="addonFiltrarTipoTimeline">Filtrar por</span>
+					
+								<h:selectOneMenu value="#{timelineMBean.tipoTimeline}"
+									styleClass="form-control" aria-describedby="addonFiltrarTipoTimeline">
+									<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE--"
+										itemDescription="--SELECIONE--" />
+									<f:selectItem itemValue="#{timelineMBean.tipoTimelineCodigosPublicados}" itemLabel="Meus Códigos Publicados"
+										itemDescription="Meus Códigos Publicados" />
+									<f:selectItem itemValue="#{timelineMBean.tipoTimelineRascunhos}" itemLabel="Meus Rascunhos"
+										itemDescription="Meus Rascunhos" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+					</h:panelGroup>
+				
+					<div class="${timelineMBean.timelineNormal ? 'col-md-5' : 'col-md-3'}">
+						<div class="input-group">
+							<span class="input-group-addon" id="addonOrdenar">Ordenar por</span>
+				
+							<h:selectOneMenu value="#{timelineMBean.opcao}"
+								styleClass="form-control" aria-describedby="addonOrdenar">
+								<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE--"
+									itemDescription="--SELECIONE--" />
+								<f:selectItem itemValue="#{timelineMBean.ordenarQualquer}" itemLabel="Qualquer"
+									itemDescription="Qualquer" />
+								<f:selectItem itemValue="#{timelineMBean.ordenarMaisRecentes}" itemLabel="Mais Recentes"
+									itemDescription="Mais Recentes" />
+								<f:selectItem itemValue="#{timelineMBean.ordenarMaisAntigas}" itemLabel="Mais Antigas"
+									itemDescription="Mais Antigas" />
+								<f:selectItem itemValue="#{timelineMBean.ordenarMaisCurtidas}" itemLabel="Mais Curtidas"
+									itemDescription="Mais Curtidas" />
+								<f:selectItem itemValue="#{timelineMBean.ordenarMenosCurtidas}" itemLabel="Menos Curtidas"
+									itemDescription="Menos Curtidas" />
+							</h:selectOneMenu>
+						</div>
+					</div>
+					
+					<div class="col-md-2">
+						<p:commandButton value="Buscar" styleClass="form-control btn btn-primary btn-xs"
+							action="#{timelineMBean.buscar}" ajax="false"/>
+					</div>
+				</div>
+			</h:form>
+			
+			<h:form id="formCodigos" prependId="false" >
+				<h:panelGroup rendered="#{empty timelineMBean.codigos}">
+					<br/>
+					<h2>Ops! Nenhum post foi encontrado.</h2>
+				</h:panelGroup>
+				
+				<h:panelGroup id="panelCodigos" rendered="#{not empty timelineMBean.codigos}">
+					<ui:include src="_paginacao_timeline.xhtml"/>
+					
+					<ui:repeat value="#{timelineMBean.codigos}" var="c" varStatus="loop">
+						<div class="post">
+							<div class="fotoUsuario">
+								<h:graphicImage url="/resources/img/anonimo.png" alt="Perfil" styleClass="fotoUsuario" 
+			            			rendered="#{c.criadoPor.idFoto == null and c.criadoPor.pessoa.sexoMasculino}"
+			            			id="fotoCriadorPost1"/>
+		            			
+		            			<h:graphicImage url="/resources/img/anonima.png" alt="Perfil" styleClass="fotoUsuario"
+			            			rendered="#{c.criadoPor.idFoto == null and c.criadoPor.pessoa.sexoFeminino}"
+			            			id="fotoCriadorPost2"/>
+			            			
+		            			<h:graphicImage styleClass="fotoUsuario" url="#{c.urlFotoCriador}"
+		            				alt="Perfil" rendered="#{c.criadoPor.idFoto != null}" id="fotoCriadorPost3"/>
+		            			
+		            			<p:tooltip for="fotoCriadorPost1" value="#{c.criadoPor.pessoa.nomeSobrenome}" 
+		            				rendered="#{c.criadoPor.idFoto == null and c.criadoPor.pessoa.sexoMasculino}"/>
+		            			
+		            			<p:tooltip for="fotoCriadorPost2" value="#{c.criadoPor.pessoa.nomeSobrenome}" 
+		            				rendered="#{c.criadoPor.idFoto == null and c.criadoPor.pessoa.sexoFeminino}"/>
+		            				
+	            				<p:tooltip for="fotoCriadorPost3" value="#{c.criadoPor.pessoa.nomeSobrenome}" 
+		            				rendered="#{c.criadoPor.idFoto != null}"/>
+							</div>
+							
+							<div class="tituloPost">${c.titulo}</div>
+							
+							<div class="dataPost">
+								Criado em ${c.dataCriacaoFormatada}. 
+								
+								<h:panelGroup rendered="#{c.atualizadoEm != null}">
+									Atualizado em: ${c.dataEdicaoFormatada}.
+								</h:panelGroup>
+							</div>
+							
+							<div class="descricaoPost">${c.descricao}</div>
+							
+							<div class="painelCodigo">
+								<div class="areaCodigo" id="conteudoPublicacao${loop.index}">
+									<pre>
+										<code class="c++">
+											<h:outputText value="#{c.codigo}"/>
+										</code>
+									</pre>
+								</div>
+							
+								<div class="divVerMaisMenos">
+									<a id="verMais${loop.index}" href="#" onclick="verMaisOuMenos(${loop.index}); ocultar('verMais${loop.index}'); mostrar('verMenos${loop.index}'); return false;">Ver Mais</a>
+									<a id="verMenos${loop.index}" href="#" onclick="verMaisOuMenos(${loop.index}); ocultar('verMenos${loop.index}'); mostrar('verMais${loop.index}'); return false;" style="display: none;">Ver Menos</a>
+								</div>
+							</div>
+							
+							<h:panelGroup rendered="#{c.idFoto != null}">
+								<div>
+									<h:graphicImage styleClass="imagemPost" url="#{c.urlImagemPost}"
+		            					alt="Imagem" rendered="#{usuarioLogado.idFoto != null}"/>
+								</div>
+							</h:panelGroup>
+							
+							<h:panelGroup rendered="#{c.idVideo != null}">
+								<div class="videoPost">
+									<video width="100%" controls="controls">
+									    <source src="#{c.urlVideoPost}" type="video/ogg" />
+									</video>
+								</div>
+							</h:panelGroup>
+							
+							<div class="opcoesPost">
+								<h:panelGroup id="panelOpcoes">	
+									<p:commandLink actionListener="#{timelineMBean.curtirPublicacao}" id="btnCurtir"
+										update="panelOpcoes" ajaxSingle="true">
+										
+										<f:param name="idPublicacao" value="#{c.id}"/>
+										<h:outputText id="curtir1" value="Curtir (#{c.qtdCurtidas})" rendered="#{not c.usuarioLogadoCurtiu}"/>
+										<h:outputText id="curtir2" value="Desfazer Curtir (#{c.qtdCurtidas})" rendered="#{c.usuarioLogadoCurtiu}"/>
+									</p:commandLink>
+									| 
+									<p:commandLink value="Visualizar" action="#{visualizarCodigoMBean.entrar}" ajax="false">
+										<f:param name="idCodigo" value="#{c.id}"/>
+									</p:commandLink>
+									
+									<p:tooltip id="descricaoQuemCurtiu" for="btnCurtir" value="#{c.descricaoQuemCurtiu}" />
+								</h:panelGroup>
+							</div>
+							
+						</div>
+						
+						<br/>
+					</ui:repeat>
+					
+					<ui:include src="_paginacao_timeline.xhtml"/>
+				</h:panelGroup>
+				
+				<h:panelGroup id="panelScripts">
+					<script>
+						function retrairTexto(){
+							$(".areaCodigo").css("max-height", "60px");
+							$(".areaCodigo").dotdotdot();
+						}
+						
+						function verMaisOuMenos(indice) {
+							var div = $("#conteudoPublicacao" + indice);
+							
+							if (div.attr("class") == "areaCodigo"){
+								div.attr("class", "");
+								div.trigger("destroy");
+								$(".divVerMaisMenos").trigger("destroy");
+								$(".painelCodigo").trigger("destroy");
+								div.css('max-height', '');
+								
+							} else {
+								div.attr("class", "areaCodigo");
+								div.trigger("destroy");
+								$(".divVerMaisMenos").trigger("destroy");
+								$(".painelCodigo").trigger("destroy");
+								retrairTexto();
+							}
+							
+							//<![CDATA[
+							if (div.css('max-height') < 60)
+								div.css('max-height', '60px');
+							//]]>
+						}
+						
+						function ocultar(elem) {
+							$("#"+elem).css("display", "none");
+						}
+						
+						function mostrar(elem) {
+							$("#"+elem).css("display", "block");
+						}
+						
+						$(document).ready(function() {
+						  $('pre code').each(function(i, block) {
+						    hljs.highlightBlock(block);
+						    retrairTexto();
+						  });
+						});
+					</script>
+				</h:panelGroup>
+				
+			</h:form>
+		</div>
+	</ui:define>
+
+</ui:composition>

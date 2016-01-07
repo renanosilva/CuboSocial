@@ -1,0 +1,232 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/template_autenticado.xhtml">
+	
+	<ui:define name="conteudo">
+		
+		<div class="jumbotron jumbotron-medio">
+	      <div class="container">
+	        <h1>Visualizar Código</h1>
+	      </div>
+	    </div>
+	    
+	    <h:outputText value="#{visualizarCodigoMBean.carregarCodigo}"/>
+	    
+	    <div class="container">
+	    	 <div class="form-group row">
+				<div class="col-md-8">
+					<h:panelGroup rendered="#{visualizarCodigoMBean.obj == null or visualizarCodigoMBean.obj.id == 0}">
+				    	<h1>Ops!</h1>
+				    	<h3>
+				    		Não foi possível recuperar a publicação selecionada. 
+				    		Por favor, utilize apenas os links oferecidos pelo sistema.
+				    	</h3>
+				    </h:panelGroup>
+					
+					<h:panelGroup rendered="#{visualizarCodigoMBean.obj != null and visualizarCodigoMBean.obj.id != 0}">
+				    	<h:form id="formCodigo" prependId="false" >
+							<h:panelGroup id="panelCodigos" rendered="#{visualizarCodigoMBean.obj.id != 0}">
+								
+								<div class="post">
+									<div class="fotoUsuario">
+										<h:graphicImage url="/resources/img/anonimo.png" alt="Perfil" styleClass="fotoUsuario" 
+					            			rendered="#{visualizarCodigoMBean.obj.criadoPor.idFoto == null and visualizarCodigoMBean.obj.criadoPor.pessoa.sexoMasculino}"/>
+				            			
+				            			<h:graphicImage url="/resources/img/anonima.png" alt="Perfil" styleClass="fotoUsuario"
+					            			rendered="#{visualizarCodigoMBean.obj.criadoPor.idFoto == null and visualizarCodigoMBean.obj.criadoPor.pessoa.sexoFeminino}"/>
+					            			
+				            			<h:graphicImage styleClass="fotoUsuario" url="#{visualizarCodigoMBean.obj.urlFotoCriador}"
+				            				alt="Perfil" rendered="#{visualizarCodigoMBean.obj.criadoPor.idFoto != null}"/>
+									</div>
+									
+									<div class="botoesADireita">
+										<p:commandButton value="Editar" styleClass="btn btn-primary"
+											ajax="false" rendered="#{visualizarCodigoMBean.obj.criadoPor.id == usuarioLogado.id}"
+											action="#{novoCodigoMBean.entrar}">
+											<f:param name="idCodigo" value="#{visualizarCodigoMBean.obj.id}"/>
+										</p:commandButton>
+										
+										<p:commandButton value="Executar" styleClass="btn btn-primary"
+											ajax="false"/>
+									</div>
+									
+									<div class="tituloPost">${visualizarCodigoMBean.obj.titulo}</div>
+									
+									<div class="dataPost">
+										Criado em ${visualizarCodigoMBean.obj.dataCriacaoFormatada}. 
+										
+										<h:panelGroup rendered="#{visualizarCodigoMBean.obj.atualizadoEm != null}">
+											Atualizado em: ${visualizarCodigoMBean.obj.dataEdicaoFormatada}.
+										</h:panelGroup>
+									</div>
+									
+									<div class="descricaoPost">${visualizarCodigoMBean.obj.descricao}</div>
+									
+									<div class="painelCodigo">
+										<div class="areaCodigo" id="conteudoPublicacao${loop.index}" style="white-space: pre-wrap; max-height: none;">
+											<h:outputText value="#{visualizarCodigoMBean.obj.codigo}"/>
+										</div>
+									</div>
+									
+									<h:panelGroup rendered="#{visualizarCodigoMBean.obj.idFoto != null}">
+										<div>
+											<h:graphicImage styleClass="imagemPost" url="#{visualizarCodigoMBean.obj.urlImagemPost}"
+				            					alt="Imagem" rendered="#{usuarioLogado.idFoto != null}"/>
+										</div>
+									</h:panelGroup>
+									
+									<h:panelGroup rendered="#{visualizarCodigoMBean.obj.idVideo != null}">
+										<div class="videoPost">
+											<video width="100%" controls="controls">
+											    <source src="#{visualizarCodigoMBean.obj.urlVideoPost}" type="video/ogg" />
+											</video>
+										</div>
+									</h:panelGroup>
+									
+									<div class="opcoesPost">
+										<h:panelGroup id="panelOpcoes">	
+											<p:commandLink actionListener="#{visualizarCodigoMBean.curtirPublicacao}" id="btnCurtir"
+												update="panelOpcoes" ajaxSingle="true">
+												
+												<f:param name="idPublicacao" value="#{visualizarCodigoMBean.obj.id}"/>
+												<h:outputText id="curtir1" value="Curtir (#{visualizarCodigoMBean.obj.qtdCurtidas})" rendered="#{not visualizarCodigoMBean.obj.usuarioLogadoCurtiu}"/>
+												<h:outputText id="curtir2" value="Desfazer Curtir (#{visualizarCodigoMBean.obj.qtdCurtidas})" rendered="#{visualizarCodigoMBean.obj.usuarioLogadoCurtiu}"/>
+											</p:commandLink>
+											
+											<p:tooltip id="descricaoQuemCurtiu" for="btnCurtir" value="#{visualizarCodigoMBean.obj.descricaoQuemCurtiu}" />
+											
+										</h:panelGroup>
+									</div>
+									
+								</div>
+								
+								<br/>
+								
+							</h:panelGroup>
+							
+						</h:form>
+					</h:panelGroup>
+				</div>
+				
+				<div class="col-md-4">
+					<ui:include src="_streaming.xhtml"/>
+				</div>
+			</div>
+			
+			<div class="form-group row">
+				<div class="col-md-8">
+		    	 	<h:panelGroup id="panelComentarios" 
+		    	 		rendered="#{visualizarCodigoMBean.obj != null and visualizarCodigoMBean.obj.id != 0}">
+			    	 	
+			    	 	<div class="comentarios">
+			    	 		<h2>Comentários (${visualizarCodigoMBean.obj.qtdComentarios})</h2>
+			    	 		
+			    	 		<h:panelGroup rendered="#{empty visualizarCodigoMBean.obj.comentarios}">
+			    	 			<h3>Nenhum comentário cadastrado para esta publicação ainda.</h3>
+			    	 		</h:panelGroup>
+			    	 		
+			    	 		<h:panelGroup rendered="#{not empty visualizarCodigoMBean.obj.comentarios}">
+					    	 	<h:form id="formComentarios" prependId="false">
+					    	 		<h:panelGroup>	
+						    	 		<ui:repeat value="#{visualizarCodigoMBean.obj.comentarios}" var="c" varStatus="loop">
+							    	 		<div class="post postComentario">
+												<div class="fotoUsuario">
+													<h:graphicImage url="/resources/img/anonimo.png" alt="Perfil" styleClass="fotoUsuario" 
+								            			rendered="#{c.criadoPor.idFoto == null and c.criadoPor.pessoa.sexoMasculino}"/>
+							            			
+							            			<h:graphicImage url="/resources/img/anonima.png" alt="Perfil" styleClass="fotoUsuario"
+								            			rendered="#{c.criadoPor.idFoto == null and c.criadoPor.pessoa.sexoFeminino}"/>
+								            			
+							            			<h:graphicImage styleClass="fotoUsuario" url="#{c.urlFotoCriador}"
+							            				alt="Perfil" rendered="#{c.criadoPor.idFoto != null}"/>
+												</div>
+												
+												<div class="tituloPost">
+													${c.criadoPor.pessoa.nomeSobrenome}
+													<span style="font-weight: normal;">comentou:</span> 
+												</div>
+												
+												<div class="dataPost">
+													Comentado em ${c.dataCriacaoFormatada}. 
+													
+													<h:panelGroup rendered="#{c.atualizadoEm != null}">
+														Editado em: ${c.dataEdicaoFormatada}.
+													</h:panelGroup>
+												</div>
+												
+												<div class="descricaoPost" style="white-space: pre-wrap;">${c.comentario}</div>
+												
+												<div class="opcoesPost">
+													<h:panelGroup id="panelOpcoesComentario">	
+														<p:commandLink actionListener="#{visualizarCodigoMBean.curtirComentario}" id="btnCurtirComentario"
+															update="panelOpcoesComentario" ajaxSingle="true">
+															
+															<f:param name="idComentario" value="#{c.id}"/>
+															<h:outputText id="curtir1" value="Curtir (#{c.qtdCurtidas})" rendered="#{not c.usuarioLogadoCurtiu}"/>
+															<h:outputText id="curtir2" value="Desfazer Curtir (#{c.qtdCurtidas})" rendered="#{c.usuarioLogadoCurtiu}"/>
+														</p:commandLink>
+			
+														<p:tooltip id="descricaoQuemCurtiu" for="btnCurtirComentario" value="#{c.descricaoQuemCurtiu}" />
+														
+														<h:panelGroup rendered="#{c.criadoPor.id == usuarioLogado.id}">
+															| 
+															<p:commandLink value="Editar" actionListener="#{visualizarCodigoMBean.editarComentario}" ajax="true"
+																update=":formNovoComentario:areaNovoComentario">
+																<f:param name="idComentario" value="#{c.id}"/>
+															</p:commandLink>
+															| 
+															<p:commandLink value="Excluir" actionListener="#{visualizarCodigoMBean.excluirComentario}" ajax="true"
+																update=":panelComentarios"
+																onclick="if (!confirm('Deseja realmente excluir este comentário??')) return false;">
+																<f:param name="idComentario" value="#{c.id}"/>
+															</p:commandLink>
+														</h:panelGroup>
+													</h:panelGroup>
+												</div>
+											</div>
+						    	 		</ui:repeat>
+						    	 	</h:panelGroup>
+					    	 	</h:form>
+				    	 	</h:panelGroup>
+			    	 	</div>
+			    	 	<div class="novoComentario">
+			    	 		<div class="input-group">
+								<span class="input-group-addon" id="addonNovoComentario">
+									<h:graphicImage url="/resources/img/anonimo.png" alt="Perfil" styleClass="fotoInserirComentario" 
+				            			rendered="#{usuarioLogado.idFoto == null and usuarioLogado.pessoa.sexoMasculino}"/>
+			            			
+			            			<h:graphicImage url="/resources/img/anonima.png" alt="Perfil" styleClass="fotoInserirComentario"
+				            			rendered="#{usuarioLogado.idFoto == null and usuarioLogado.pessoa.sexoFeminino}"/>
+				            			
+			            			<h:graphicImage styleClass="fotoInserirComentario" url="#{cuboSocialMBean.urlFotoUsuario}"
+			            				alt="Perfil" rendered="#{usuarioLogado.idFoto != null}"/>
+								</span>
+								
+								<h:form id="formNovoComentario">
+									<p:inputTextarea styleClass="form-control"
+										value="#{visualizarCodigoMBean.comentario.comentario}" rows="2"
+										required="true" requiredMessage="Digite um comentário."
+										aria-describedby="addonNovoComentario" 
+										id="areaNovoComentario"/>
+									
+									<p:commandButton value="Publicar" styleClass="btn btn-primary form-control"
+										ajax="true" actionListener="#{visualizarCodigoMBean.publicarComentario}"
+										update=":panelComentarios"
+										aria-describedby="addonNovoComentario"/>
+								</h:form>
+							</div>
+			    	 	</div>
+			    	 </h:panelGroup>
+			    </div>
+			</div>
+	    </div>
+	    
+	</ui:define>
+
+</ui:composition>

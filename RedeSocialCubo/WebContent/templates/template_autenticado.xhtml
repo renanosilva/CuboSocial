@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<!-- <meta charset="utf-8"/> -->
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+	    
+		<c:set var="ctx" value="CuboSocial"/>
+		
+		<title>Cubo Social</title>
+		<link rel="shortcut icon" href="/${ctx}/resources/img/favicon.ico"/>
+		
+		<link rel="stylesheet" type="text/css" href="/${ctx}/resources/css/bootstrap.min.css" media="all"/>
+		<link rel="stylesheet" type="text/css" href="/${ctx}/resources/css/cubo_social.css" media="all"/>
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+	    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	    <!--[if lt IE 9]>
+	      <script src="/${ctx}/resources/js/html5shiv.min.js"></script>
+	      <script src="/${ctx}/resources/js/respond.min.js"></script>
+	    <![endif]-->
+	    
+	    <script src="/${ctx}/resources/js/jquery.min.js"></script>
+		<script src="/${ctx}/resources/js/bootstrap.min.js"></script>
+		
+		<script src="/${ctx}/resources/js/cubo_social.js"></script>
+		
+		<!-- Visualizador de códigos -->
+		<link rel="stylesheet" href="/${ctx}/resources/highlight/styles/default.css"></link>
+		<script src="/${ctx}/resources/highlight/highlight.pack.js"></script>
+		
+	</h:head>
+	
+	<h:body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed"
+						data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+						aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span> 
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<h:form>
+						<h:commandLink action="#{timelineMBean.inicio}" value="Cubo Social"
+	            			styleClass="navbar-brand" />
+			        </h:form>
+				</div>
+				
+				<div id="navbar" class="collapse navbar-collapse">
+		          <h:form>
+			          <ul class="nav navbar-nav">
+			            <li>
+			            	<h:commandLink action="#{novoCodigoMBean.entrar}" value="Novo Código"
+			            		styleClass="linkMenuTopo" />
+			            </li>
+			            <li>
+			            	<h:commandLink action="#{timelineMBean.inicio}" value="Meus Códigos"
+			            		styleClass="linkMenuTopo">
+			            		<f:param name="meusCodigos" value="true"/>
+			            	</h:commandLink>
+			            </li>
+			            <li><a href="#">Visualizar Cubos</a></li>
+			          </ul>
+		          </h:form>
+		          
+		          <h:form>
+			          <ul class="nav navbar-nav navbar-right">
+			            <li style="background-color: gray;">
+			            	<h:commandLink styleClass="linkMenuTopo" 
+			            		action="#{cadastroUsuariosMBean.entrarEditarPerfil}">
+			            		<h:graphicImage url="/resources/img/anonimo.png" alt="Perfil" styleClass="fotoPerfil" 
+			            			rendered="#{usuarioLogado.idFoto == null and usuarioLogado.pessoa.sexoMasculino}"/>
+		            			
+		            			<h:graphicImage url="/resources/img/anonima.png" alt="Perfil" styleClass="fotoPerfil"
+			            			rendered="#{usuarioLogado.idFoto == null and usuarioLogado.pessoa.sexoFeminino}"/>
+			            			
+		            			<h:graphicImage styleClass="fotoPerfil" url="#{cuboSocialMBean.urlFotoUsuario}"
+		            				alt="Perfil" rendered="#{usuarioLogado.idFoto != null}"/>
+			            	</h:commandLink>
+			            </li>
+			            <li>
+			            	<h:commandLink styleClass="linkMenuTopo" value="#{usuarioLogado.pessoa.nome}"
+			            		action="#{cadastroUsuariosMBean.entrarEditarPerfil}"/>
+			            	
+			            </li>
+			            <li>
+			            	<h:commandLink styleClass="linkMenuTopo" value="Sair" action="#{loginMBean.logoff}"/>
+			            </li>
+			          </ul>
+		          </h:form>
+		          
+		        </div>
+			</div>
+		</nav>
+
+		<div class="divPrincipal">
+			<ui:insert name="conteudo">
+				Conteúdo...
+			</ui:insert>
+			<p:growl life="30000" id="mensagens" />
+		</div>
+	</h:body>
+</html>

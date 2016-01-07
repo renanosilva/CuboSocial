@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<div class="form-group row">
+		<div class="col-md-6">
+			<div class="input-group">
+				<span class="input-group-addon" id="addonFoto">Foto</span>
+				
+				<h:graphicImage styleClass="form-control" url="/resources/img/anonimo.png" alt="Perfil" 
+					style="width: 128px; height: 128px;" rendered="#{usuarioLogado.idFoto == null and usuarioLogado.pessoa.sexoMasculino}"
+					aria-describedby="addonFoto"/>
+         			
+       			<h:graphicImage styleClass="form-control" url="/resources/img/anonima.png" alt="Perfil" 
+       				style="width: 128px; height: 128px;" rendered="#{usuarioLogado.idFoto == null and usuarioLogado.pessoa.sexoFeminino}"
+       				aria-describedby="addonFoto"/>
+       				
+       			<h:graphicImage styleClass="form-control" url="/resources/img/anonimo.png" alt="Perfil" 
+					style="width: 128px; height: 128px;" rendered="#{usuarioLogado == null}"
+					aria-describedby="addonFoto"/>
+				
+				<h:graphicImage styleClass="form-control" url="#{cuboSocialMBean.urlFotoUsuario}"
+      				alt="Perfil" rendered="#{usuarioLogado != null and usuarioLogado.idFoto != null}"
+      				style="width: 128px; height: 128px;" aria-describedby="addonFoto"/>
+       			
+       			<p:fileUpload mode="simple" value="#{cadastroUsuariosMBean.obj.arquivo}" 
+       				aria-describedby="addonFoto" style="margin-left: 143px; margin-top: 42px;"/>
+				
+			</div>
+		</div>
+		
+		<div class="col-md-6" style="height: 128px;">
+			<div class="input-group" style="margin-top: 15px;">
+				<span class="input-group-addon" id="addonNome">Nome</span>
+				
+				<p:inputText styleClass="form-control"
+					value="#{cadastroUsuariosMBean.obj.pessoa.nome}" required="true"
+					requiredMessage="Campo Nome Obrigatório" size="40"
+					aria-describedby="addonNome" />
+			</div>
+			
+			<div class="input-group" style="margin-top: 15px;">
+				<span class="input-group-addon" id="addonSobrenome">Sobrenome</span>
+				
+				<p:inputText styleClass="form-control"
+					value="#{cadastroUsuariosMBean.obj.pessoa.sobrenome}"
+					required="true" requiredMessage="Campo Sobrenome Obrigatório"
+					size="40" aria-describedby="addonSobrenome" />
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group row">
+		<div class="col-md-6">
+			<div class="input-group">
+				<span class="input-group-addon" id="addonLogin">Email</span>
+				<p:inputText styleClass="form-control"
+					value="#{cadastroUsuariosMBean.obj.email}" required="true"
+					requiredMessage="Campo Email Obrigatório" size="40"
+					aria-describedby="addonLogin">
+					<f:validateLength minimum="4" />
+				</p:inputText>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="input-group">
+				<span class="input-group-addon" id="addonCPF">CPF</span>
+	
+				<p:inputText value="#{cadastroUsuariosMBean.obj.pessoa.cpf}"
+					required="true" requiredMessage="Campo CPF Obrigatório"
+					maxlength="14" size="14" validator="cpfValidator"
+					onkeypress="mascaraCPF(this);" onchange="mascaraCPF(this);" styleClass="form-control"
+					aria-describedby="addonCPF" />
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group row">
+		<div class="col-md-6">
+			<div class="input-group">
+				<span class="input-group-addon" id="addonSenha">Senha</span>
+				
+				<p:password value="#{cadastroUsuariosMBean.obj.senha}" id="senhaCadastro"
+					required="#{cadastroUsuariosMBean.obj.id == 0}" requiredMessage="Campo Senha Obrigatório"
+					validatorMessage="O campo senha deve ter no mínimo 6 caracteres"
+					size="20" styleClass="form-control" aria-describedby="addonSenha">
+					<f:validateLength minimum="6" />
+				</p:password>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="input-group">
+				<span class="input-group-addon" id="addonConfirmSenha">Confirmar
+					Senha</span>
+	
+				<p:password value="#{cadastroUsuariosMBean.obj.novaSenhaConfirmacao}"
+					required="#{cadastroUsuariosMBean.obj.id == 0}" requiredMessage="Campo Confirmar Senha Obrigatório"
+					size="20"
+					styleClass="form-control" aria-describedby="addonConfirmSenha">
+				</p:password>
+	
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group row">
+		<div class="col-md-6">
+			<div class="input-group">
+				<span class="input-group-addon" id="addonDataNascimento">Data
+					de Nascimento</span>
+	
+				<p:calendar
+					value="#{cadastroUsuariosMBean.obj.pessoa.dataNascimento}"
+					mask="99/99/9999" navigator="true" required="true"
+					requiredMessage="Campo Data de Nascimento Obrigatório" size="14"
+					pattern="dd/MM/yyyy" yearRange="c-100:c" id="dataNascimento" />
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="input-group">
+				<span class="input-group-addon" id="addonSexo">Sexo</span>
+	
+				<h:selectOneMenu value="#{cadastroUsuariosMBean.obj.pessoa.sexo}"
+					required="true" requiredMessage="Campo Sexo Obrigatório" id="sexo"
+					styleClass="form-control" aria-describedby="addonConfirmSenha"
+					style="width: 100%;">
+					<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE--"
+						itemDescription="--SELECIONE--" />
+					<f:selectItem itemValue="F" itemLabel="Feminino"
+						itemDescription="Feminino" />
+					<f:selectItem itemValue="M" itemLabel="Masculino"
+						itemDescription="Masculino" />
+				</h:selectOneMenu>
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group row">
+		<div class="col-md-6">
+			<div class="input-group">
+				<span class="input-group-addon" id="addonCidade">Cidade</span>
+				<p:inputText value="#{cadastroUsuariosMBean.obj.pessoa.cidade}"
+					required="true" requiredMessage="Campo Cidade Obrigatório"
+					styleClass="form-control" aria-describedby="addonCidade" />
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="input-group">
+				<span class="input-group-addon" id="addonSexo">UF</span>
+				<h:selectOneMenu value="#{cadastroUsuariosMBean.obj.pessoa.uf}"
+					required="true" requiredMessage="Campo UF Obrigatório"
+					styleClass="form-control" aria-describedby="addonConfirmSenha"
+					style="width: 100%;">
+					<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE--"
+						itemDescription="--SELECIONE--" />
+					<f:selectItems value="#{uFMBean.allUFsCombo}" />
+				</h:selectOneMenu>
+			</div>
+		</div>
+	</div>
+
+</ui:composition>

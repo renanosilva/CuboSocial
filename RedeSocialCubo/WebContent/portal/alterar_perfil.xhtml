@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+	
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/template_autenticado.xhtml">
+	
+	<ui:define name="conteudo">
+		
+		<div class="jumbotron jumbotron-medio">
+	      <div class="container">
+	        <h1>Edição de Perfil</h1>
+	      </div>
+	    </div>
+	    
+	    <div class="container">
+	    	 <h:form prependId="false" enctype="multipart/form-data">
+	    	 	<ui:include src="/publico/_usuario.xhtml"/>
+			  	
+			    <p:commandButton value="Salvar" styleClass="btn btn-primary"
+						action="#{cadastroUsuariosMBean.salvar}" ajax="false"/>
+			    
+			    <script>
+			    	resolverConflitoBootstrap("dataNascimento_input", "addonDataNascimento");
+			    </script>
+			    
+		    </h:form>
+	    </div>
+	    
+	</ui:define>
+
+</ui:composition>

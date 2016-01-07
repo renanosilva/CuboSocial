@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:form>
+    	<h:selectOneMenu styleClass="form-control"
+			required="true" requiredMessage="Selecione o cubo para streaming"
+			style="width: 256px;">
+			<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE O CUBO--"
+				itemDescription="--SELECIONE O CUBO--" />
+			<f:selectItem itemValue="2" itemLabel="2x2x2"
+				itemDescription="2x2x2" />
+			<f:selectItem itemValue="3" itemLabel="3x3x3"
+				itemDescription="3x3x3" />
+			<f:selectItem itemValue="4" itemLabel="4x4x4"
+				itemDescription="4x4x4" />
+			<f:selectItem itemValue="5" itemLabel="5x5x5"
+				itemDescription="5x5x5" />
+		</h:selectOneMenu>
+    	<br/>
+    	<iframe class="frameStreaming">
+    		
+    	</iframe>
+    </h:form>
+</ui:composition>
