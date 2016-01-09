@@ -103,7 +103,7 @@
 		  var editor = CodeMirror.fromTextArea(myTextarea, {
 		    lineNumbers: true,
 		    matchBrackets: true,
-	        mode: "text/x-csrc",
+	        mode: "text/x-c++src",
 		  });
 		  var mac = CodeMirror.keyMap.default == CodeMirror.keyMap.macDefault;
       		CodeMirror.keyMap.default[(mac ? "Cmd" : "Ctrl") + "-Space"] = "autocomplete";

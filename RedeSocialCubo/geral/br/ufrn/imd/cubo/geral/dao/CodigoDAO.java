@@ -37,6 +37,23 @@ public class CodigoDAO extends GenericDAOImpl {
 	}
 	
 	/**
+	 * Faz update da nota média de uma publicação.
+	 * 
+	 * @return
+	 * @throws DAOException
+	 */
+	public void updateNotaMediaCodigo(int idPublicacao) throws DAOException {
+		
+		String sql = "UPDATE geral.codigo " +
+					 "SET nota = " +
+							" (SELECT avg(nota) FROM geral.avaliacao_codigo ac " +
+							" WHERE ac.id_publicacao = " + idPublicacao + ") " +
+					 "WHERE id_codigo = " + idPublicacao;
+		
+		update(sql);
+	}
+	
+	/**
 	 * Faz update da quantidade de curtidas de um comentário.
 	 * 
 	 * @return

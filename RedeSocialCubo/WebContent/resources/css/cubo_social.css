@@ -120,3 +120,15 @@ a.linkMenuTopo:HOVER {
 .hljs {
 	background-color: transparent !important;
 }
+
+.star-rating {
+	display: inline;
+}
+
+.rating-xs {
+	font-size: 18px !important;
+}
+
+.rating-sm {
+	font-size: 20px !important;
+}

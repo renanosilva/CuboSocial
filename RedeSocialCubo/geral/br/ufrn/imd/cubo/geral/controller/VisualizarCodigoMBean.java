@@ -32,11 +32,14 @@ public class VisualizarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 	/** Comentário que está sendo inserido no momento. */
 	private Comentario comentario;
 	
+	private boolean irParaComentarios;
+	
 	@PostConstruct
 	private void init() {
 		obj = new Codigo();
 		dao = new CodigoDAO();
 		comentario = new Comentario();
+		irParaComentarios = false;
 	}
 	
 	/** Entra na tela de visualização. */
@@ -147,13 +150,18 @@ public class VisualizarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 		}
 	}
 	
-	public String getCarregarCodigo(){
+	public String getCarregarDadosPagina(){
 		if (ValidatorUtil.isEmpty(obj)){
 			int idCodigo = getParameterInt("idCodigo", -1);
 			
 			if (idCodigo != -1)
 				recarregarPublicacaoCodigo(idCodigo);
 		}
+		
+		String irParaComentarios = getParameter("irParaComentarios");
+		
+		if (irParaComentarios != null && irParaComentarios.equals("true"))
+			this.irParaComentarios = true;
 	
 		return null;
 	}
@@ -169,6 +177,14 @@ public class VisualizarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 
 	public void setComentario(Comentario comentario) {
 		this.comentario = comentario;
+	}
+
+	public boolean isIrParaComentarios() {
+		return irParaComentarios;
+	}
+
+	public void setIrParaComentarios(boolean irParaComentarios) {
+		this.irParaComentarios = irParaComentarios;
 	}
 	
 }

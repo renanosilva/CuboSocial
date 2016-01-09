@@ -16,7 +16,7 @@
 	      </div>
 	    </div>
 	    
-	    <h:outputText value="#{visualizarCodigoMBean.carregarCodigo}"/>
+	    <h:outputText value="#{visualizarCodigoMBean.carregarDadosPagina}"/>
 	    
 	    <div class="container">
 	    	 <div class="form-group row">
@@ -46,13 +46,13 @@
 									</div>
 									
 									<div class="botoesADireita">
-										<p:commandButton value="Editar" styleClass="btn btn-primary"
+										<p:commandButton value="Editar" styleClass="btn btn-primary btn-xs"
 											ajax="false" rendered="#{visualizarCodigoMBean.obj.criadoPor.id == usuarioLogado.id}"
 											action="#{novoCodigoMBean.entrar}">
 											<f:param name="idCodigo" value="#{visualizarCodigoMBean.obj.id}"/>
 										</p:commandButton>
 										
-										<p:commandButton value="Executar" styleClass="btn btn-primary"
+										<p:commandButton value="Executar" styleClass="btn btn-primary btn-xs"
 											ajax="false"/>
 									</div>
 									
@@ -124,7 +124,7 @@
 		    	 	<h:panelGroup id="panelComentarios" 
 		    	 		rendered="#{visualizarCodigoMBean.obj != null and visualizarCodigoMBean.obj.id != 0}">
 			    	 	
-			    	 	<div class="comentarios">
+			    	 	<div class="comentarios" id="comentarios">
 			    	 		<h2>Comentários (${visualizarCodigoMBean.obj.qtdComentarios})</h2>
 			    	 		
 			    	 		<h:panelGroup rendered="#{empty visualizarCodigoMBean.obj.comentarios}">
@@ -226,6 +226,12 @@
 			    </div>
 			</div>
 	    </div>
+	    
+	    <h:panelGroup rendered="#{visualizarCodigoMBean.irParaComentarios == true}">
+		    <script>
+		    	window.location.hash = 'comentarios';
+		    </script>
+	    </h:panelGroup>
 	    
 	</ui:define>
 

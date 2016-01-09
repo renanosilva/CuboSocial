@@ -10,7 +10,13 @@
 	template="/templates/template_autenticado.xhtml">
 	
 	<ui:define name="conteudo">
+		<!-- dotdotdot -->
 		<script src="/${ctx}/resources/js/jquery.dotdotdot.min.js"></script>
+		
+		<!-- boostrap rating -->
+		<link href="/${ctx}/resources/rating/css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
+		<script src="/${ctx}/resources/rating/js/star-rating.min.js" type="text/javascript"></script>
+		<script src="/${ctx}/resources/rating/js/star-rating_locale_br.js"></script>
 		
 		<h:outputText value="#{timelineMBean.carregarCodigos}" id="carregarCodigos"/>
 		
@@ -85,7 +91,7 @@
 				<h:panelGroup id="panelCodigos" rendered="#{not empty timelineMBean.codigos}">
 					<ui:include src="_paginacao_timeline.xhtml"/>
 					
-					<ui:repeat value="#{timelineMBean.codigos}" var="c" varStatus="loop">
+					<ui:repeat value="${timelineMBean.codigos}" var="c" varStatus="loop">
 						<div class="post">
 							<div class="fotoUsuario">
 								<h:graphicImage url="/resources/img/anonimo.png" alt="Perfil" styleClass="fotoUsuario" 
@@ -109,15 +115,43 @@
 		            				rendered="#{c.criadoPor.idFoto != null}"/>
 							</div>
 							
+							<div class="botoesADireita">
+								<p:commandButton value="Visualizar" styleClass="btn btn-primary btn-xs" 
+									ajax="false" action="#{visualizarCodigoMBean.entrar}">
+									<f:param name="idCodigo" value="#{c.id}"/>
+								</p:commandButton>
+								
+								<p:commandButton value="Editar" styleClass="btn btn-primary btn-xs"
+									ajax="false" rendered="#{c.criadoPor.id == usuarioLogado.id}"
+									action="#{novoCodigoMBean.entrar}">
+									<f:param name="idCodigo" value="#{c.id}"/>
+								</p:commandButton>
+								
+								<p:commandButton value="Excluir" styleClass="btn btn-primary btn-xs"
+									ajax="false" rendered="#{c.criadoPor.id == usuarioLogado.id}"
+									onclick="if (!confirm('Deseja realmente excluir esta publicação??')) return false;"/>
+							</div>
+							
 							<div class="tituloPost">${c.titulo}</div>
 							
 							<div class="dataPost">
 								Criado em ${c.dataCriacaoFormatada}. 
 								
 								<h:panelGroup rendered="#{c.atualizadoEm != null}">
-									Atualizado em: ${c.dataEdicaoFormatada}.
+									Editado em: ${c.dataEdicaoFormatada}.
 								</h:panelGroup>
 							</div>
+							
+							<div class="descricaoPost">
+								<h:panelGroup id="painelAvaliacaoGeral">	
+									<input id="avaliacaoGeral" value="${c.nota}" type="number" class="rating form-control hide" readonly="readonly"
+										min="0" max="5" step="0.5" data-size="sm"  data-show-clear="false" data-language="br"/>
+								</h:panelGroup>
+								<br/>
+								<p:rating value="#{c.id}"></p:rating>
+							</div>
+							
+							<p:tooltip id="descricaoAvaliacaoGeral" for="painelAvaliacaoGeral" value="Média da avaliação dos usuários: #{c.nota}" />
 							
 							<div class="descricaoPost">${c.descricao}</div>
 							
@@ -160,13 +194,31 @@
 										<h:outputText id="curtir1" value="Curtir (#{c.qtdCurtidas})" rendered="#{not c.usuarioLogadoCurtiu}"/>
 										<h:outputText id="curtir2" value="Desfazer Curtir (#{c.qtdCurtidas})" rendered="#{c.usuarioLogadoCurtiu}"/>
 									</p:commandLink>
-									| 
-									<p:commandLink value="Visualizar" action="#{visualizarCodigoMBean.entrar}" ajax="false">
-										<f:param name="idCodigo" value="#{c.id}"/>
-									</p:commandLink>
 									
 									<p:tooltip id="descricaoQuemCurtiu" for="btnCurtir" value="#{c.descricaoQuemCurtiu}" />
 								</h:panelGroup>
+								
+								|
+								 
+								<h:panelGroup id="painelAvaliacaoUsuario">
+									<input id="avaliacaoUsuario_${loop.index}" value="0" type="number" class="rating form-control hide avaliacaoUsuario"
+										min="0" max="5" step="0.5" data-size="xs" data-show-caption="false" data-clear-button-title="Limpar Avaliação"/>
+								</h:panelGroup>
+								
+								<h:commandLink styleClass="botaoAvaliarUsuario#{loop.index}" style="display: none;" 
+									actionListener="#{timelineMBean.avaliarPublicacao}" ajaxSingle="true" value="-1">
+									<f:param name="idPublicacao" value="#{c.id}"/>
+								</h:commandLink>
+								
+								<p:tooltip id="descricaoAvaliacaoUsuario" for="painelAvaliacaoUsuario" value="Sua avaliação para este código." />
+								
+								|
+								
+								<p:commandLink value="#{c.qtdComentarios} comentários"
+									ajax="false" action="#{visualizarCodigoMBean.entrar}">
+									<f:param name="idCodigo" value="#{c.id}"/>
+									<f:param name="irParaComentarios" value="true"/>
+								</p:commandLink>
 							</div>
 							
 						</div>
@@ -179,6 +231,8 @@
 				
 				<h:panelGroup id="panelScripts">
 					<script>
+						//Scripts para retrair/expandir publicações
+					
 						function retrairTexto(){
 							$(".areaCodigo").css("max-height", "60px");
 							$(".areaCodigo").dotdotdot();
@@ -216,11 +270,29 @@
 							$("#"+elem).css("display", "block");
 						}
 						
+						//Realce de sintaxe de códigos
+						
 						$(document).ready(function() {
 						  $('pre code').each(function(i, block) {
 						    hljs.highlightBlock(block);
 						    retrairTexto();
 						  });
+						});
+						
+						//Scripts para avaliação de códigos
+						
+						$('.avaliacaoUsuario').on('rating.change', function(event, value, caption) {
+						    var inputAvaliacao = event.currentTarget;
+						    var id = inputAvaliacao.id;
+						    var index = id.split("_")[1];
+						    
+						    var botao = $('.botaoAvaliarUsuario'+ index)[0];
+						    botao.value = value;
+						    botao.click();
+						});
+						
+						$('.avaliacaoUsuario').on('rating.clear', function(event) {
+							alert("limpou o valor");
 						});
 					</script>
 				</h:panelGroup>

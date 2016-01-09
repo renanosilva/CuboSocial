@@ -110,6 +110,32 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 		}
 	}
 	
+	/** Avaliar uma publicação. */
+	public void avaliarPublicacao(ActionEvent evt) {
+		IGenericDAO dao = null;
+		evt.getComponent().getChildren();
+//		try {
+//			dao = new GenericDAOImpl();
+//			
+//			Codigo publicacao = dao.findByPrimaryKey(getParameterInt("idPublicacao"), Codigo.class);
+//
+//			ProcessadorAvaliarPublicacao p = new ProcessadorAvaliarPublicacao();
+//			p.setObj(publicacao);
+//			p.execute();
+//			
+//			//Atualizando registro
+//			
+//			publicacao = dao.findByPrimaryKey(publicacao.getId(), Codigo.class);
+//			int pos = codigos.indexOf(publicacao);
+//			codigos.set(pos, publicacao);
+//			
+//		} catch (ArqException e) {
+//			tratamentoErroPadrao(e);
+//		} catch (NegocioException e) {
+//			tratamentoNegocioException(e);
+//		}
+	}
+	
 	/**
 	 * Mude a página atual da paginação de acordo com o parâmetro informado, referente à listagem de publicações.
 	 * 

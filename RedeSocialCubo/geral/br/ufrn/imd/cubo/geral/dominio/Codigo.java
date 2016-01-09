@@ -82,8 +82,12 @@ public class Codigo extends PersistDBRecorded {
 	private List<Comentario> comentarios;
 	
 	/** Avaliação dos usuários quanto ao código. Varia de 0 a 5. */
-	@Column(name="nota", nullable = false)
+	@Column(name="nota", nullable = false, scale=2)
 	private float nota;
+	
+	/** Armazena a nota atribuída pelo usuário logado ao código em questão. Variável auxiliar. */
+	@Transient
+	private float notaUsuarioLogado;
 	
 	/** 
 	 * Atributo não persisitido que armazena uma foto que o usuário deseja
@@ -310,6 +314,14 @@ public class Codigo extends PersistDBRecorded {
 
 	public void setQtdComentarios(int qtdComentarios) {
 		this.qtdComentarios = qtdComentarios;
+	}
+
+	public float getNotaUsuarioLogado() {
+		return notaUsuarioLogado;
+	}
+
+	public void setNotaUsuarioLogado(float notaUsuarioLogado) {
+		this.notaUsuarioLogado = notaUsuarioLogado;
 	}
 	
 }
