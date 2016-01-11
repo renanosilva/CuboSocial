@@ -2,6 +2,7 @@ package br.ufrn.imd.cubo.geral.dominio;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -74,11 +75,11 @@ public class Codigo extends PersistDBRecorded {
 	private int qtdComentarios;
 	
 	/** Curtidas que a publicação recebeu. */
-	@OneToMany(mappedBy = "publicacao", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "publicacao", fetch = FetchType.LAZY, cascade=CascadeType.REMOVE)
 	private List<Curtida> curtidas;
 	
 	/** Comentários associados à publicação. */
-	@OneToMany(mappedBy = "publicacao", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "publicacao", fetch = FetchType.LAZY, cascade=CascadeType.REMOVE)
 	private List<Comentario> comentarios;
 	
 	/** Avaliação dos usuários quanto ao código. Varia de 0 a 5. */
@@ -87,7 +88,7 @@ public class Codigo extends PersistDBRecorded {
 	
 	/** Armazena a nota atribuída pelo usuário logado ao código em questão. Variável auxiliar. */
 	@Transient
-	private float notaUsuarioLogado;
+	private Integer notaUsuarioLogado;
 	
 	/** 
 	 * Atributo não persisitido que armazena uma foto que o usuário deseja
@@ -271,6 +272,10 @@ public class Codigo extends PersistDBRecorded {
 	public float getNota() {
 		return nota;
 	}
+	
+	public Integer getNotaArredondada(){
+		return Math.round(nota);
+	}
 
 	public void setNota(float nota) {
 		this.nota = nota;
@@ -316,11 +321,11 @@ public class Codigo extends PersistDBRecorded {
 		this.qtdComentarios = qtdComentarios;
 	}
 
-	public float getNotaUsuarioLogado() {
+	public Integer getNotaUsuarioLogado() {
 		return notaUsuarioLogado;
 	}
 
-	public void setNotaUsuarioLogado(float notaUsuarioLogado) {
+	public void setNotaUsuarioLogado(Integer notaUsuarioLogado) {
 		this.notaUsuarioLogado = notaUsuarioLogado;
 	}
 	

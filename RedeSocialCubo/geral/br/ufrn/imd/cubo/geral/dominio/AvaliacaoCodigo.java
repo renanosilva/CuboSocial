@@ -38,12 +38,12 @@ public class AvaliacaoCodigo extends PersistDBRecorded {
 	
 	/** Publicação que foi avaliada. */
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="id_publicacao")
+	@JoinColumn(name="id_publicacao", nullable=false)
 	private Codigo publicacao;
 	
 	/** Nota atribuída pelo usuário à publicação. */
-	@Column(nullable=false, precision=3, scale=2)
-	private float nota;
+	@Column(nullable=false)
+	private Integer nota;
 	
 	@Override
 	public int hashCode() {
@@ -83,12 +83,11 @@ public class AvaliacaoCodigo extends PersistDBRecorded {
 		this.publicacao = publicacao;
 	}
 
-	public float getNota() {
+	public Integer getNota() {
 		return nota;
 	}
 
-	public void setNota(float nota) {
+	public void setNota(Integer nota) {
 		this.nota = nota;
 	}
-	
 }

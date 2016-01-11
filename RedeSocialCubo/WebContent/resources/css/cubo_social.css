@@ -67,8 +67,14 @@ a.linkMenuTopo:HOVER {
 	float: right;
 }
 
-.post .descricaoPost {
+.avaliacaoGeralPost {
 	clear: both;
+	width: 100%;
+	height: 20px;
+	margin-top: 10px;
+}
+
+.post .descricaoPost {
 	margin-top: 10px;
 }
 
@@ -78,6 +84,10 @@ a.linkMenuTopo:HOVER {
 
 .opcoesPost {
 	margin-top: 10px;
+}
+
+.panelOpcaoCurtir {
+	float: left;
 }
 
 .imagemPost{
@@ -121,14 +131,6 @@ a.linkMenuTopo:HOVER {
 	background-color: transparent !important;
 }
 
-.star-rating {
+.ui-rating{
 	display: inline;
-}
-
-.rating-xs {
-	font-size: 18px !important;
-}
-
-.rating-sm {
-	font-size: 20px !important;
 }

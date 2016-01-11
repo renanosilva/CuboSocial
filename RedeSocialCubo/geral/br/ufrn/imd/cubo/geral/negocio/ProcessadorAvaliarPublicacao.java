@@ -34,11 +34,12 @@ public class ProcessadorAvaliarPublicacao extends ProcessadorCadastro {
 				//O usuário não avaliou a publicação ainda. Deve ser criado um novo registro.
 				AvaliacaoCodigo avaliacao = new AvaliacaoCodigo();
 				avaliacao.setPublicacao(obj);
+				avaliacao.setNota(obj.getNotaUsuarioLogado());
 				dao.create(avaliacao);
 			} else {
 				//O usuário já avaliou a publicação. A ação é para atualizar a avaliação.
 				
-				Float nota = obj.getNotaUsuarioLogado() > 0 ? obj.getNotaUsuarioLogado() : null; 
+				Integer nota = obj.getNotaUsuarioLogado(); 
 				
 				if (nota == null){
 					//O usuário removeu a avaliação. Deve-se remover o registro do banco.

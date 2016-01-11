@@ -5,6 +5,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 
+import org.primefaces.event.RateEvent;
+
 import br.ufrn.imd.cubo.arq.controller.AbstractControllerCadastro;
 import br.ufrn.imd.cubo.arq.dao.GenericDAOImpl;
 import br.ufrn.imd.cubo.arq.dao.IGenericDAO;
@@ -12,8 +14,10 @@ import br.ufrn.imd.cubo.arq.exception.ArqException;
 import br.ufrn.imd.cubo.arq.exception.NegocioException;
 import br.ufrn.imd.cubo.arq.util.ValidatorUtil;
 import br.ufrn.imd.cubo.geral.dao.CodigoDAO;
+import br.ufrn.imd.cubo.geral.dominio.AvaliacaoCodigo;
 import br.ufrn.imd.cubo.geral.dominio.Codigo;
 import br.ufrn.imd.cubo.geral.dominio.Comentario;
+import br.ufrn.imd.cubo.geral.negocio.ProcessadorAvaliarPublicacao;
 import br.ufrn.imd.cubo.geral.negocio.ProcessadorCadastrarComentario;
 import br.ufrn.imd.cubo.geral.negocio.ProcessadorCurtirComentario;
 import br.ufrn.imd.cubo.geral.negocio.ProcessadorCurtirPublicacao;
@@ -63,6 +67,41 @@ public class VisualizarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 			//Atualizando registro
 			
 			obj = dao.findByPrimaryKey(publicacao.getId(), Codigo.class);
+		} catch (ArqException e) {
+			tratamentoErroPadrao(e);
+		} catch (NegocioException e) {
+			tratamentoNegocioException(e);
+		}
+	}
+	
+	/** Atribuir uma nota a uma publicação. */
+	public void avaliarPublicacao(RateEvent rateEvent) {
+		avaliarPublicacao();
+	}
+	
+	/** Cancela (remove) uma avaliação de código. */
+	public void cancelarAvaliacaoPublicacao() {
+		avaliarPublicacao();
+    }
+	
+	/** Operações necessárias para avaliar uma publicação de código. */
+	private void avaliarPublicacao(){
+		IGenericDAO dao = null;
+		
+		try {
+			dao = new GenericDAOImpl();
+			
+			Codigo publicacaoBanco = dao.findByPrimaryKey(obj.getId(), Codigo.class);
+			publicacaoBanco.setNotaUsuarioLogado(obj.getNotaUsuarioLogado());
+
+			ProcessadorAvaliarPublicacao p = new ProcessadorAvaliarPublicacao();
+			p.setObj(publicacaoBanco);
+			p.execute();
+			
+			//Atualizando registro
+			
+			obj = dao.findByPrimaryKey(publicacaoBanco.getId(), Codigo.class);
+			
 		} catch (ArqException e) {
 			tratamentoErroPadrao(e);
 		} catch (NegocioException e) {
@@ -169,6 +208,16 @@ public class VisualizarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 	private void recarregarPublicacaoCodigo(int idCodigo){
 		obj = dao.findByPrimaryKey(idCodigo, Codigo.class);
 		obj.setComentarios(dao.findByExactField("publicacao.id", obj.getId(), "criadoEm ASC", Comentario.class));
+		
+		//Carregando avaliação do usuário logado para o código em questão
+		AvaliacaoCodigo ava = dao.findByExactFields(new String[]{"criadoPor.id", "publicacao.id"}, 
+								new Object[]{getUsuarioLogado().getId(), obj.getId()}, 
+								true, 
+								AvaliacaoCodigo.class);
+		
+		if (ValidatorUtil.isNotEmpty(ava)){
+			obj.setNotaUsuarioLogado(ava.getNota());
+		}
 	}
 
 	public Comentario getComentario() {

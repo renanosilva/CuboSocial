@@ -2,11 +2,14 @@ package br.ufrn.imd.cubo.geral.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
+
+import org.primefaces.event.RateEvent;
 
 import br.ufrn.imd.cubo.arq.controller.AbstractControllerCadastro;
 import br.ufrn.imd.cubo.arq.dao.GenericDAOImpl;
@@ -14,9 +17,14 @@ import br.ufrn.imd.cubo.arq.dao.IGenericDAO;
 import br.ufrn.imd.cubo.arq.dao.PagingInformation;
 import br.ufrn.imd.cubo.arq.exception.ArqException;
 import br.ufrn.imd.cubo.arq.exception.NegocioException;
+import br.ufrn.imd.cubo.arq.util.CuboSocialUtils;
+import br.ufrn.imd.cubo.arq.util.ValidatorUtil;
 import br.ufrn.imd.cubo.geral.dao.CodigoDAO;
+import br.ufrn.imd.cubo.geral.dominio.AvaliacaoCodigo;
 import br.ufrn.imd.cubo.geral.dominio.Codigo;
+import br.ufrn.imd.cubo.geral.negocio.ProcessadorAvaliarPublicacao;
 import br.ufrn.imd.cubo.geral.negocio.ProcessadorCurtirPublicacao;
+import br.ufrn.imd.cubo.geral.negocio.ProcessadorExcluiCodigo;
 
 /** 
  * MBean que controla operações relacionadas à timeline
@@ -110,30 +118,84 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 		}
 	}
 	
-	/** Avaliar uma publicação. */
-	public void avaliarPublicacao(ActionEvent evt) {
+	/** Atribuir uma nota a uma publicação. */
+	public void avaliarPublicacao(RateEvent rateEvent) {
+		avaliarPublicacao();
+	}
+	
+	/** Cancela (remove) uma avaliação de código. */
+	public void cancelarAvaliacaoPublicacao() {
+		avaliarPublicacao();
+    }
+	
+	/** Operações necessárias para avaliar uma publicação de código. */
+	private void avaliarPublicacao(){
 		IGenericDAO dao = null;
-		evt.getComponent().getChildren();
-//		try {
-//			dao = new GenericDAOImpl();
-//			
-//			Codigo publicacao = dao.findByPrimaryKey(getParameterInt("idPublicacao"), Codigo.class);
-//
-//			ProcessadorAvaliarPublicacao p = new ProcessadorAvaliarPublicacao();
-//			p.setObj(publicacao);
-//			p.execute();
-//			
-//			//Atualizando registro
-//			
-//			publicacao = dao.findByPrimaryKey(publicacao.getId(), Codigo.class);
-//			int pos = codigos.indexOf(publicacao);
-//			codigos.set(pos, publicacao);
-//			
-//		} catch (ArqException e) {
-//			tratamentoErroPadrao(e);
-//		} catch (NegocioException e) {
-//			tratamentoNegocioException(e);
-//		}
+		
+		try {
+			dao = new GenericDAOImpl();
+			
+			int idPublicacao = getParameterInt("idPublicacao");
+			
+			Codigo c = new Codigo();
+			c.setId(idPublicacao);
+			
+			Codigo codigoLista = codigos.get(codigos.indexOf(c));
+			
+			Codigo publicacaoBanco = dao.findByPrimaryKey(idPublicacao, Codigo.class);
+			publicacaoBanco.setNotaUsuarioLogado(codigoLista.getNotaUsuarioLogado());
+
+			ProcessadorAvaliarPublicacao p = new ProcessadorAvaliarPublicacao();
+			p.setObj(publicacaoBanco);
+			p.execute();
+			
+			//Atualizando registro
+			
+			publicacaoBanco = dao.findByPrimaryKey(publicacaoBanco.getId(), Codigo.class);
+			
+			int pos = codigos.indexOf(publicacaoBanco);
+			codigos.set(pos, publicacaoBanco);
+			
+		} catch (ArqException e) {
+			tratamentoErroPadrao(e);
+		} catch (NegocioException e) {
+			tratamentoNegocioException(e);
+		}
+	}
+	
+	/** Exclui uma publicação de código. */
+	public String excluirPublicacao() {
+		int idPublicacao = getParameterInt("idPublicacao", -1);
+		
+		if (idPublicacao != -1){
+			try {
+				boolean isUltimaPagina = (paginacao.getPaginaAtual() + 1) == paginacao.getTotalPaginas();
+				boolean reduzirPagina = isUltimaPagina && codigos.size() == 1;
+				
+				Codigo c = dao.findByPrimaryKey(idPublicacao, Codigo.class);
+				
+				ProcessadorExcluiCodigo p = new ProcessadorExcluiCodigo();
+				p.setObj(c);
+				p.execute();
+				
+				//Forçando recarregamento dos códigos
+				codigos = null;
+				
+				if (reduzirPagina){
+					paginacao.previousPage(null);
+				}
+				
+				getCarregarCodigos();
+				
+			} catch (ArqException e) {
+				tratamentoErroPadrao(e);
+			} catch (NegocioException e) {
+				tratamentoErroPadrao(e);
+			}
+		}
+		
+		return null;
+		
 	}
 	
 	/**
@@ -186,7 +248,10 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 									opcao == OpcaoOrdenar.MAIS_RECENTES ? "criadoEm DESC" :
 									opcao == OpcaoOrdenar.MAIS_CURTIDAS ? "qtdCurtidas DESC" :
 									opcao == OpcaoOrdenar.MENOS_CURTIDAS ? "qtdCurtidas ASC" :
-									opcao == OpcaoOrdenar.MENOS_CURTIDAS ? "qtdCurtidas ASC" : null;
+									opcao == OpcaoOrdenar.MAIS_COMENTADAS ? "qtdComentarios DESC" :
+									opcao == OpcaoOrdenar.MENOS_COMENTADAS ? "qtdComentarios ASC" :
+									opcao == OpcaoOrdenar.MELHORES_AVALIADAS ? "nota DESC" :
+									opcao == OpcaoOrdenar.PIORES_AVALIADAS ? "nota ASC" : null;
 				
 				Boolean finalizados = (tipoTimeline == TipoTimeline.NORMAL || tipoTimeline == TipoTimeline.MEUS_CODIGOS_PUBLICADOS) ? true : 
 										tipoTimeline == TipoTimeline.MEUS_RASCUNHOS ? false : null;
@@ -199,6 +264,28 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 						finalizados, 
 						criadoPor, 
 						paginacao);
+				
+				//Buscando quais dos códigos encontrados o usuário avaliou
+				
+				if (ValidatorUtil.isNotEmpty(codigos)){
+					int[] idsCodigos = CuboSocialUtils.persistDbToArray(codigos);
+					
+					Map<Integer, AvaliacaoCodigo> map = dao.findAvaliacoesCodigosByIdsCodigos(idsCodigos, getUsuarioLogado().getId());
+					
+					if (map != null){
+						for (Integer id : map.keySet()){
+							Codigo c = new Codigo();
+							c.setId(id);
+							
+							AvaliacaoCodigo ava = map.get(id);
+							
+							//Setando a nota que o usuário logado atribuiu à publicação em questão
+							codigos.get(codigos.indexOf(c)).setNotaUsuarioLogado(ava.getNota());;
+						}
+					}
+				}
+				
+				
 			} catch (Exception e) {
 				codigos = new ArrayList<>();
 				tratamentoErroPadrao(e);
@@ -246,6 +333,22 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 	
 	public OpcaoOrdenar getOrdenarMenosCurtidas() {
 		return OpcaoOrdenar.MENOS_CURTIDAS;
+	}
+	
+	public OpcaoOrdenar getOrdenarMaisComentadas() {
+		return OpcaoOrdenar.MAIS_COMENTADAS;
+	}
+	
+	public OpcaoOrdenar getOrdenarMenosComentadas() {
+		return OpcaoOrdenar.MENOS_COMENTADAS;
+	}
+	
+	public OpcaoOrdenar getOrdenarMelhoresAvaliacoes() {
+		return OpcaoOrdenar.MELHORES_AVALIADAS;
+	}
+	
+	public OpcaoOrdenar getOrdenarPioresAvaliacoes() {
+		return OpcaoOrdenar.PIORES_AVALIADAS;
 	}
 
 	public PagingInformation getPaginacao() {

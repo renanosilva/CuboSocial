@@ -13,11 +13,6 @@
 		<!-- dotdotdot -->
 		<script src="/${ctx}/resources/js/jquery.dotdotdot.min.js"></script>
 		
-		<!-- boostrap rating -->
-		<link href="/${ctx}/resources/rating/css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
-		<script src="/${ctx}/resources/rating/js/star-rating.min.js" type="text/javascript"></script>
-		<script src="/${ctx}/resources/rating/js/star-rating_locale_br.js"></script>
-		
 		<h:outputText value="#{timelineMBean.carregarCodigos}" id="carregarCodigos"/>
 		
 		<div class="container">
@@ -71,6 +66,14 @@
 									itemDescription="Mais Curtidas" />
 								<f:selectItem itemValue="#{timelineMBean.ordenarMenosCurtidas}" itemLabel="Menos Curtidas"
 									itemDescription="Menos Curtidas" />
+								<f:selectItem itemValue="#{timelineMBean.ordenarMaisComentadas}" itemLabel="Mais Comentadas"
+									itemDescription="Mais Comentadas" />
+								<f:selectItem itemValue="#{timelineMBean.ordenarMenosComentadas}" itemLabel="Menos Comentadas"
+									itemDescription="Menos Comentadas" />
+								<f:selectItem itemValue="#{timelineMBean.ordenarMelhoresAvaliacoes}" itemLabel="Melhores Avaliações"
+									itemDescription="Melhores Avaliações" />
+								<f:selectItem itemValue="#{timelineMBean.ordenarPioresAvaliacoes}" itemLabel="Piores Avaliações"
+									itemDescription="Piores Avaliações" />
 							</h:selectOneMenu>
 						</div>
 					</div>
@@ -83,6 +86,7 @@
 			</h:form>
 			
 			<h:form id="formCodigos" prependId="false" >
+				
 				<h:panelGroup rendered="#{empty timelineMBean.codigos}">
 					<br/>
 					<h2>Ops! Nenhum post foi encontrado.</h2>
@@ -91,7 +95,7 @@
 				<h:panelGroup id="panelCodigos" rendered="#{not empty timelineMBean.codigos}">
 					<ui:include src="_paginacao_timeline.xhtml"/>
 					
-					<ui:repeat value="${timelineMBean.codigos}" var="c" varStatus="loop">
+					<ui:repeat value="#{timelineMBean.codigos}" var="c" varStatus="loop">
 						<div class="post">
 							<div class="fotoUsuario">
 								<h:graphicImage url="/resources/img/anonimo.png" alt="Perfil" styleClass="fotoUsuario" 
@@ -128,8 +132,11 @@
 								</p:commandButton>
 								
 								<p:commandButton value="Excluir" styleClass="btn btn-primary btn-xs"
-									ajax="false" rendered="#{c.criadoPor.id == usuarioLogado.id}"
-									onclick="if (!confirm('Deseja realmente excluir esta publicação??')) return false;"/>
+									rendered="#{c.criadoPor.id == usuarioLogado.id}" ajax="false"
+									action="#{timelineMBean.excluirPublicacao}" 
+									onclick="if (!confirm('Deseja realmente excluir esta publicação??')) return false;">
+									<f:param name="idPublicacao" value="#{c.id}"/>
+								</p:commandButton>
 							</div>
 							
 							<div class="tituloPost">${c.titulo}</div>
@@ -142,16 +149,13 @@
 								</h:panelGroup>
 							</div>
 							
-							<div class="descricaoPost">
+							<div class="avaliacaoGeralPost">
 								<h:panelGroup id="painelAvaliacaoGeral">	
-									<input id="avaliacaoGeral" value="${c.nota}" type="number" class="rating form-control hide" readonly="readonly"
-										min="0" max="5" step="0.5" data-size="sm"  data-show-clear="false" data-language="br"/>
+									<p:rating value="#{c.notaArredondada}" readonly="true" id="avaliacaoGeral" />
+									
+									<p:tooltip id="descricaoAvaliacaoGeral" for="painelAvaliacaoGeral" value="Média da avaliação dos usuários: #{c.nota}" />
 								</h:panelGroup>
-								<br/>
-								<p:rating value="#{c.id}"></p:rating>
 							</div>
-							
-							<p:tooltip id="descricaoAvaliacaoGeral" for="painelAvaliacaoGeral" value="Média da avaliação dos usuários: #{c.nota}" />
 							
 							<div class="descricaoPost">${c.descricao}</div>
 							
@@ -186,9 +190,9 @@
 							</h:panelGroup>
 							
 							<div class="opcoesPost">
-								<h:panelGroup id="panelOpcoes">	
+								<h:panelGroup id="panelOpcaoCurtir" styleClass="panelOpcaoCurtir">	
 									<p:commandLink actionListener="#{timelineMBean.curtirPublicacao}" id="btnCurtir"
-										update="panelOpcoes" ajaxSingle="true">
+										update="panelOpcaoCurtir" ajaxSingle="true">
 										
 										<f:param name="idPublicacao" value="#{c.id}"/>
 										<h:outputText id="curtir1" value="Curtir (#{c.qtdCurtidas})" rendered="#{not c.usuarioLogadoCurtiu}"/>
@@ -196,21 +200,20 @@
 									</p:commandLink>
 									
 									<p:tooltip id="descricaoQuemCurtiu" for="btnCurtir" value="#{c.descricaoQuemCurtiu}" />
+									
+									|
 								</h:panelGroup>
 								
-								|
-								 
 								<h:panelGroup id="painelAvaliacaoUsuario">
-									<input id="avaliacaoUsuario_${loop.index}" value="0" type="number" class="rating form-control hide avaliacaoUsuario"
-										min="0" max="5" step="0.5" data-size="xs" data-show-caption="false" data-clear-button-title="Limpar Avaliação"/>
+									<p:rating value="#{c.notaUsuarioLogado}">
+							            <f:param name="idPublicacao" value="#{c.id}"/>
+							            <p:ajax event="rate" listener="#{timelineMBean.avaliarPublicacao}" update="painelAvaliacaoGeral"/>
+							            <p:ajax event="cancel" listener="#{timelineMBean.cancelarAvaliacaoPublicacao}" update="painelAvaliacaoGeral" />
+							        </p:rating>
 								</h:panelGroup>
 								
-								<h:commandLink styleClass="botaoAvaliarUsuario#{loop.index}" style="display: none;" 
-									actionListener="#{timelineMBean.avaliarPublicacao}" ajaxSingle="true" value="-1">
-									<f:param name="idPublicacao" value="#{c.id}"/>
-								</h:commandLink>
-								
-								<p:tooltip id="descricaoAvaliacaoUsuario" for="painelAvaliacaoUsuario" value="Sua avaliação para este código." />
+								<p:tooltip id="descricaoAvaliacaoUsuario" for="painelAvaliacaoUsuario" value="Sua avaliação para este código." 
+									showDelay="5000"/>
 								
 								|
 								
@@ -277,22 +280,6 @@
 						    hljs.highlightBlock(block);
 						    retrairTexto();
 						  });
-						});
-						
-						//Scripts para avaliação de códigos
-						
-						$('.avaliacaoUsuario').on('rating.change', function(event, value, caption) {
-						    var inputAvaliacao = event.currentTarget;
-						    var id = inputAvaliacao.id;
-						    var index = id.split("_")[1];
-						    
-						    var botao = $('.botaoAvaliarUsuario'+ index)[0];
-						    botao.value = value;
-						    botao.click();
-						});
-						
-						$('.avaliacaoUsuario').on('rating.clear', function(event) {
-							alert("limpou o valor");
 						});
 					</script>
 				</h:panelGroup>

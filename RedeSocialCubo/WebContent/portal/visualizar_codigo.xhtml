@@ -9,6 +9,12 @@
 	template="/templates/template_autenticado.xhtml">
 	
 	<ui:define name="conteudo">
+		<style>
+		
+			.opcoesPost {
+				padding-bottom: 15px;
+			}
+		</style>
 		
 		<div class="jumbotron jumbotron-medio">
 	      <div class="container">
@@ -35,14 +41,23 @@
 								
 								<div class="post">
 									<div class="fotoUsuario">
-										<h:graphicImage url="/resources/img/anonimo.png" alt="Perfil" styleClass="fotoUsuario" 
+										<h:graphicImage url="/resources/img/anonimo.png" alt="Perfil" styleClass="fotoUsuario" id="fotoCriadorPost1"
 					            			rendered="#{visualizarCodigoMBean.obj.criadoPor.idFoto == null and visualizarCodigoMBean.obj.criadoPor.pessoa.sexoMasculino}"/>
 				            			
-				            			<h:graphicImage url="/resources/img/anonima.png" alt="Perfil" styleClass="fotoUsuario"
+				            			<h:graphicImage url="/resources/img/anonima.png" alt="Perfil" styleClass="fotoUsuario" id="fotoCriadorPost2"
 					            			rendered="#{visualizarCodigoMBean.obj.criadoPor.idFoto == null and visualizarCodigoMBean.obj.criadoPor.pessoa.sexoFeminino}"/>
 					            			
-				            			<h:graphicImage styleClass="fotoUsuario" url="#{visualizarCodigoMBean.obj.urlFotoCriador}"
+				            			<h:graphicImage styleClass="fotoUsuario" url="#{visualizarCodigoMBean.obj.urlFotoCriador}" id="fotoCriadorPost3"
 				            				alt="Perfil" rendered="#{visualizarCodigoMBean.obj.criadoPor.idFoto != null}"/>
+				            			
+				            			<p:tooltip for="fotoCriadorPost1" value="#{visualizarCodigoMBean.obj.criadoPor.pessoa.nomeSobrenome}" 
+				            				rendered="#{visualizarCodigoMBean.obj.criadoPor.idFoto == null and visualizarCodigoMBean.obj.criadoPor.pessoa.sexoMasculino}"/>
+				            			
+				            			<p:tooltip for="fotoCriadorPost2" value="#{visualizarCodigoMBean.obj.criadoPor.pessoa.nomeSobrenome}" 
+				            				rendered="#{visualizarCodigoMBean.obj.criadoPor.idFoto == null and visualizarCodigoMBean.obj.criadoPor.pessoa.sexoFeminino}"/>
+				            				
+			            				<p:tooltip for="fotoCriadorPost3" value="#{visualizarCodigoMBean.obj.criadoPor.pessoa.nomeSobrenome}" 
+				            				rendered="#{visualizarCodigoMBean.obj.criadoPor.idFoto != null}"/>
 									</div>
 									
 									<div class="botoesADireita">
@@ -66,11 +81,24 @@
 										</h:panelGroup>
 									</div>
 									
+									<div class="avaliacaoGeralPost">
+										<h:panelGroup id="painelAvaliacaoGeral">	
+											<p:rating value="#{visualizarCodigoMBean.obj.notaArredondada}" readonly="true" id="avaliacaoGeral" />
+											
+											<p:tooltip id="descricaoAvaliacaoGeral" for="painelAvaliacaoGeral" 
+												value="Média da avaliação dos usuários: #{visualizarCodigoMBean.obj.nota}" />
+										</h:panelGroup>
+									</div>
+									
 									<div class="descricaoPost">${visualizarCodigoMBean.obj.descricao}</div>
 									
 									<div class="painelCodigo">
-										<div class="areaCodigo" id="conteudoPublicacao${loop.index}" style="white-space: pre-wrap; max-height: none;">
-											<h:outputText value="#{visualizarCodigoMBean.obj.codigo}"/>
+										<div class="areaCodigo" id="conteudoPublicacao${loop.index}" style="max-height: none;">
+											<pre>
+												<code class="c++">
+													<h:outputText value="#{visualizarCodigoMBean.obj.codigo}"/>
+												</code>
+											</pre>
 										</div>
 									</div>
 									
@@ -90,9 +118,9 @@
 									</h:panelGroup>
 									
 									<div class="opcoesPost">
-										<h:panelGroup id="panelOpcoes">	
+										<h:panelGroup id="panelOpcaoCurtir" styleClass="panelOpcaoCurtir">	
 											<p:commandLink actionListener="#{visualizarCodigoMBean.curtirPublicacao}" id="btnCurtir"
-												update="panelOpcoes" ajaxSingle="true">
+												update="panelOpcaoCurtir" ajaxSingle="true">
 												
 												<f:param name="idPublicacao" value="#{visualizarCodigoMBean.obj.id}"/>
 												<h:outputText id="curtir1" value="Curtir (#{visualizarCodigoMBean.obj.qtdCurtidas})" rendered="#{not visualizarCodigoMBean.obj.usuarioLogadoCurtiu}"/>
@@ -101,7 +129,18 @@
 											
 											<p:tooltip id="descricaoQuemCurtiu" for="btnCurtir" value="#{visualizarCodigoMBean.obj.descricaoQuemCurtiu}" />
 											
+											|
 										</h:panelGroup>
+										
+										<h:panelGroup id="painelAvaliacaoUsuario">
+											<p:rating value="#{visualizarCodigoMBean.obj.notaUsuarioLogado}">
+									            <p:ajax event="rate" listener="#{visualizarCodigoMBean.avaliarPublicacao}" update="painelAvaliacaoGeral"/>
+									            <p:ajax event="cancel" listener="#{visualizarCodigoMBean.cancelarAvaliacaoPublicacao}" update="painelAvaliacaoGeral" />
+									        </p:rating>
+										</h:panelGroup>
+										
+										<p:tooltip id="descricaoAvaliacaoUsuario" for="painelAvaliacaoUsuario" value="Sua avaliação para este código." 
+											showDelay="5000"/>
 									</div>
 									
 								</div>
@@ -232,6 +271,16 @@
 		    	window.location.hash = 'comentarios';
 		    </script>
 	    </h:panelGroup>
+	    
+	    <script>
+		  	//Realce de sintaxe de códigos
+			
+			$(document).ready(function() {
+			  $('pre code').each(function(i, block) {
+			    hljs.highlightBlock(block);
+			  });
+			});
+	    </script>
 	    
 	</ui:define>
 
