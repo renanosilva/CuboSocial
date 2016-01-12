@@ -64,11 +64,11 @@ public class UsuarioDAO extends GenericDAOImpl {
 	 * Método que permite listar usuários através da busca por
 	 * diversos atributos.
 	 */
-	public List<Usuario> findUsuarioGeral(String login, String nome, String cpf, 
+	public List<Usuario> findUsuarioGeral(String login, String nome, 
 			boolean incluirUsuariosInativos){
 		EntityManager em = getEm();
 		
-		String hql = "SELECT u.id, u.pessoa.nome, u.pessoa.cpf, u.email, u.ativo ";
+		String hql = "SELECT u.id, u.pessoa.nome, u.email, u.ativo ";
 		hql += " FROM Usuario u WHERE 1=1 ";
 		
 		if (ValidatorUtil.isNotEmpty(login)){
@@ -76,9 +76,6 @@ public class UsuarioDAO extends GenericDAOImpl {
 		}
 		if (ValidatorUtil.isNotEmpty(nome)){
 			hql += " AND upper(u.pessoa.nome) like :nome ";
-		}
-		if (ValidatorUtil.isNotEmpty(cpf)){
-			hql += " AND u.pessoa.cpf = :cpf ";
 		}
 		if (!incluirUsuariosInativos){
 			hql += " AND u.ativo = :ativo ";
@@ -91,9 +88,6 @@ public class UsuarioDAO extends GenericDAOImpl {
 		}
 		if (ValidatorUtil.isNotEmpty(nome)){
 			q.setParameter("nome", "%" + nome.toUpperCase() + "%");
-		}
-		if (ValidatorUtil.isNotEmpty(cpf)){
-			q.setParameter("cpf", cpf);
 		}
 		if (!incluirUsuariosInativos){
 			q.setParameter("ativo", true);
@@ -113,7 +107,6 @@ public class UsuarioDAO extends GenericDAOImpl {
 					
 					usuario.setId((Integer) obj[i++]);
 					usuario.getPessoa().setNome((String) obj[i++]);
-					usuario.getPessoa().setCpf((String) obj[i++]);
 					usuario.setEmail((String) obj[i++]);
 					usuario.setAtivo((Boolean) obj[i++]);
 					

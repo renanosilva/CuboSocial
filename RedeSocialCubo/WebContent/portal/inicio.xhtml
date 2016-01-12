@@ -8,6 +8,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui"
 	template="/templates/template_autenticado.xhtml">
+
+	<ui:param name="opcaoAtiva" 
+		value="#{timelineMBean.timelineNormal ? menuPrincipalMBean.menuTimeline : menuPrincipalMBean.menuMeusCodigos}" />
 	
 	<ui:define name="conteudo">
 		<!-- dotdotdot -->
@@ -85,7 +88,7 @@
 				</div>
 			</h:form>
 			
-			<h:form id="formCodigos" prependId="false" >
+			<h:form id="formCodigos" prependId="false">
 				
 				<h:panelGroup rendered="#{empty timelineMBean.codigos}">
 					<br/>
@@ -123,6 +126,7 @@
 								<p:commandButton value="Visualizar" styleClass="btn btn-primary btn-xs" 
 									ajax="false" action="#{visualizarCodigoMBean.entrar}">
 									<f:param name="idCodigo" value="#{c.id}"/>
+									<f:param name="timeline" value="#{timelineMBean}"/>
 								</p:commandButton>
 								
 								<p:commandButton value="Editar" styleClass="btn btn-primary btn-xs"
@@ -139,7 +143,15 @@
 								</p:commandButton>
 							</div>
 							
-							<div class="tituloPost">${c.titulo}</div>
+							<div class="tituloPost">
+								<h:panelGroup rendered="#{not c.finalizado}">
+									<h:graphicImage url="/resources/img/rascunho.png" 
+										title="Este código é um rascunho e não foi publicado ainda."
+										style="width: 16px; height: 16px;"/>	
+								</h:panelGroup>
+								
+								${c.titulo}
+							</div>
 							
 							<div class="dataPost">
 								Criado em ${c.dataCriacaoFormatada}. 

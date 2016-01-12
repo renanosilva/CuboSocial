@@ -6,6 +6,6 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/geral"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <property name="java-output-path" value="/RedeSocialCubo/build/classes"/>
-        <property name="context-root" value="RedeSocialCubo"/>
+        <property name="context-root" value="CuboSocial"/>
     </wb-module>
 </project-modules>

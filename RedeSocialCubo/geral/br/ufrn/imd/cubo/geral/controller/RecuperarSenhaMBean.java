@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.mail.MessagingException;
 
 import br.ufrn.imd.cubo.arq.controller.AbstractController;
 import br.ufrn.imd.cubo.arq.dao.GenericDAOImpl;
@@ -13,7 +12,6 @@ import br.ufrn.imd.cubo.arq.dao.IGenericDAO;
 import br.ufrn.imd.cubo.arq.dominio.Usuario;
 import br.ufrn.imd.cubo.arq.exception.ArqException;
 import br.ufrn.imd.cubo.arq.exception.NegocioException;
-import br.ufrn.imd.cubo.arq.helper.MailHelper;
 import br.ufrn.imd.cubo.arq.util.ValidatorUtil;
 import br.ufrn.imd.cubo.geral.negocio.ProcessadorRecuperacaoSenha;
 
@@ -26,12 +24,12 @@ import br.ufrn.imd.cubo.geral.negocio.ProcessadorRecuperacaoSenha;
 @ViewScoped
 public class RecuperarSenhaMBean extends AbstractController {
 	
-	/** CPF informado pelo usuário. */
-	private String cpf;
+	/** Email informado pelo usuário. */
+	private String email;
 	
 	@PostConstruct
 	private void init() {
-		cpf = null;
+		email = null;
 	}
 	
 	public String entrarRecuperarSenha(){
@@ -41,10 +39,10 @@ public class RecuperarSenhaMBean extends AbstractController {
 	
 	public String recuperar(){
 		IGenericDAO dao = new GenericDAOImpl();
-		List<Usuario> usuarios = dao.findByExactField("pessoa.cpf", cpf, Usuario.class);
+		List<Usuario> usuarios = dao.findByExactField("email", email, Usuario.class);
 		
 		if (ValidatorUtil.isEmpty(usuarios)){
-			addMsgError("Não existe usuário com o CPF informado.");
+			addMsgError("Não existe usuário com o email informado.");
 			return null;
 		}
 		
@@ -56,13 +54,7 @@ public class RecuperarSenhaMBean extends AbstractController {
 		try {
 			usuario = (Usuario) p.execute();
 			
-			String msg = "Caro usuário,<br/> uma nova senha foi gerada para sua conta, devido a uma solicitação de recuperação de senha. Seguem seus novos dados:";
-			msg += "<br/><br/>Nova senha: " + usuario.getSenhaReal();
-			msg += "<br/><br/>É importante que você altere a senha novamente na primeira utilização do sistema.";
-			msg += "<br/><br/>Cubo Social - IMD/UFRN<br/>";
-			
-			MailHelper.enviarEmail(usuario.getEmail(), "Recuperação de Senha", msg);
-			addMsgInfo("Dentro de instantes, será enviada uma mensagem para o email cadastrado para este usuário. Verifique sua caixa de mensagens para recuperar sua senha.");
+			addMsgInfo("Dentro de instantes, será enviada uma mensagem para o email informado. Verifique sua caixa de mensagens para recuperar sua senha.");
 			
 		} catch (ArqException e) {
 			tratamentoErroPadrao(e);
@@ -70,21 +62,16 @@ public class RecuperarSenhaMBean extends AbstractController {
 		} catch (NegocioException e) {
 			tratamentoNegocioException(e);
 			return null;
-		} catch (MessagingException e){
-			addMsgError("Ocorreu um erro ao enviar o email. Por favor, tente novamente mais tarde.");
-			e.printStackTrace();
-			return null;
-		}
+		} 
 			
 		return Paginas.LOGIN_PAGE;
 	}
 
-	public String getCpf() {
-		return cpf;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
+	public void setEmail(String email) {
+		this.email = email;
 	}
-	
 }

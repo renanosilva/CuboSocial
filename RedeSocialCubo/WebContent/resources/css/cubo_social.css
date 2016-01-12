@@ -26,6 +26,10 @@ a.linkMenuTopo {
 	text-decoration: none;
 }
 
+a.linkMenuTopo.ativo {
+	color: #fff !important;
+}
+
 a.linkMenuTopo:HOVER {
 	color: #fff;
 }

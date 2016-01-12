@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 
 import org.primefaces.event.RateEvent;
@@ -33,7 +33,7 @@ import br.ufrn.imd.cubo.geral.negocio.ProcessadorExcluiCodigo;
  */
 @SuppressWarnings("serial")
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 
 	/** Quantidade de códigos a serem exibidos por página. */
@@ -75,13 +75,28 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 		obj = new Codigo();
 		dao = new CodigoDAO();
 		codigos = null;
-		
 		paginacao = new PagingInformation(0, QTD_CODIGOS);
+		
 		tipoTimeline = TipoTimeline.NORMAL;
+		tituloBusca = null;
+		opcao = null;
 	}
 	
 	/** Entra na tela da timeline. */
 	public String inicio(){
+		init();
+		
+		String meusCodigos = getParameter("meusCodigos");
+		
+		if (meusCodigos != null && meusCodigos.equals("true")){
+			tipoTimeline = TipoTimeline.MEUS_CODIGOS_PUBLICADOS;
+		}
+		
+		return Paginas.PORTAL_INICIO;
+	}
+	
+	/** Volta à timeline, sem resetá-la. */
+	public String voltarTimeline(){
 		return Paginas.PORTAL_INICIO;
 	}
 	
@@ -234,10 +249,6 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 	
 	public String getCarregarCodigos(){
 		String meusCodigos = getParameter("meusCodigos");
-		
-		if (meusCodigos != null && meusCodigos.equals("true")){
-			tipoTimeline = TipoTimeline.MEUS_CODIGOS_PUBLICADOS;
-		}
 		
 		if (codigos == null || meusCodigos != null){
 			CodigoDAO dao = (CodigoDAO) this.dao;

@@ -88,7 +88,7 @@ public class MailHelper {
 
 		message.setRecipients(Message.RecipientType.TO, toUser);
 		message.setSubject(titulo);// Assunto
-		message.setContent(mensagem, "text/html");
+		message.setContent(mensagem, "text/html; charset=UTF-8");
 		
 		Transport.send(message);
 		System.out.println("Email enviado...");

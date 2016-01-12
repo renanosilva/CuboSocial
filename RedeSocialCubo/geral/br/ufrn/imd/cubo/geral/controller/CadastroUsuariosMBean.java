@@ -1,7 +1,5 @@
 package br.ufrn.imd.cubo.geral.controller;
 
-import java.util.Date;
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -66,16 +64,6 @@ public class CadastroUsuariosMBean extends AbstractControllerCadastro<Usuario> {
 	public String salvar() throws InstantiationException,
 			IllegalAccessException {
 		
-		if (ValidatorUtil.isEmpty(obj.getPessoa().getDataNascimento())){
-			addMsgError("Campo Data de Nascimento Obrigatório");
-			return null;
-		}
-		
-		if (obj.getPessoa().getDataNascimento().after(new Date())){
-			addMsgError("A data de nascimento não pode ser posterior à atual.");
-			return null;
-		}
-		
 		IGenericDAO dao = new GenericDAOImpl();
 		boolean erro = false;
 		
@@ -85,11 +73,7 @@ public class CadastroUsuariosMBean extends AbstractControllerCadastro<Usuario> {
 		
 		if (cadastro){	
 			if (ValidatorUtil.isNotEmpty(dao.findByExactField("email", obj.getEmail(), Usuario.class))){
-				addMsgError("Já existe um usuário com o login informado.");
-				erro = true;
-			}
-			if (ValidatorUtil.isNotEmpty(dao.findByExactField("cpf", obj.getPessoa().getCpf(), Pessoa.class))){
-				addMsgError("Já existe um usuário com o CPF informado.");
+				addMsgError("Já existe um usuário com o email informado.");
 				erro = true;
 			}
 			if (!obj.getSenha().equals(obj.getNovaSenhaConfirmacao())){
@@ -113,11 +97,22 @@ public class CadastroUsuariosMBean extends AbstractControllerCadastro<Usuario> {
 		
 		if (!ValidatorUtil.validateEmail(obj.getEmail())){
 			addMsgError("O email informado é inválido.");
-			return null;
+			erro = true;
 		}
-
+		
+		String nomeCompleto = obj.getPessoa().getNomeSobrenome().trim();
+		
+		if (!nomeCompleto.contains(" ")){
+			addMsgError("Informe seu sobrenome.");
+			erro = true;
+		}
+		
 		if (erro)
 			return null;
+		
+		int posEspaco = nomeCompleto.indexOf(" ");
+		obj.getPessoa().setNome(nomeCompleto.substring(0, posEspaco));
+		obj.getPessoa().setSobrenome(nomeCompleto.substring(posEspaco + 1));
 		
 		if (!cadastro && ValidatorUtil.isEmpty(obj.getSenha())){
 			//Se for edição, só deve modificar a senha caso o usuário tenha digitado alguma coisa
@@ -138,7 +133,7 @@ public class CadastroUsuariosMBean extends AbstractControllerCadastro<Usuario> {
 			p.setObj(obj);
 			p.execute();
 			
-			addMsgInfo("Operação realizada com sucesso!");
+			addMsgInfo((cadastro ? "Cadastro realizado" : "Alteração realizada") + " com sucesso!");
 			
 			return posCadastro();
 			

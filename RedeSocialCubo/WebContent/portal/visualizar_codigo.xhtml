@@ -8,9 +8,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/templates/template_autenticado.xhtml">
 	
+	<ui:param name="opcaoAtiva" 
+		value="#{timelineMBean.timelineNormal ? menuPrincipalMBean.menuTimeline : menuPrincipalMBean.menuMeusCodigos}" />
+	
 	<ui:define name="conteudo">
 		<style>
-		
 			.opcoesPost {
 				padding-bottom: 15px;
 			}
@@ -18,7 +20,16 @@
 		
 		<div class="jumbotron jumbotron-medio">
 	      <div class="container">
-	        <h1>Visualizar Código</h1>
+	        <h1>
+	        	<h:form>
+	        		<p:commandLink action="#{timelineMBean.voltarTimeline}"
+	        			ajax="false">
+	        			<p:graphicImage url="/resources/img/icon_back_48_48.png" title="Voltar"/>
+	        		</p:commandLink>
+	        		
+	        		Visualizar Código
+	        	</h:form>
+	        </h1>
 	      </div>
 	    </div>
 	    

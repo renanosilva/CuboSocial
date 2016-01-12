@@ -36,29 +36,16 @@
 		</div>
 		
 		<div class="col-md-6" style="height: 128px;">
-			<div class="input-group" style="margin-top: 15px;">
+			<div class="input-group" style="margin-top: 5px;">
 				<span class="input-group-addon" id="addonNome">Nome</span>
 				
 				<p:inputText styleClass="form-control"
-					value="#{cadastroUsuariosMBean.obj.pessoa.nome}" required="true"
+					value="#{cadastroUsuariosMBean.obj.pessoa.nomeSobrenome}" required="true"
 					requiredMessage="Campo Nome Obrigatório" size="40"
 					aria-describedby="addonNome" />
 			</div>
 			
-			<div class="input-group" style="margin-top: 15px;">
-				<span class="input-group-addon" id="addonSobrenome">Sobrenome</span>
-				
-				<p:inputText styleClass="form-control"
-					value="#{cadastroUsuariosMBean.obj.pessoa.sobrenome}"
-					required="true" requiredMessage="Campo Sobrenome Obrigatório"
-					size="40" aria-describedby="addonSobrenome" />
-			</div>
-		</div>
-	</div>
-	
-	<div class="form-group row">
-		<div class="col-md-6">
-			<div class="input-group">
+			<div class="input-group" style="margin-top: 5px;">
 				<span class="input-group-addon" id="addonLogin">Email</span>
 				<p:inputText styleClass="form-control"
 					value="#{cadastroUsuariosMBean.obj.email}" required="true"
@@ -67,16 +54,21 @@
 					<f:validateLength minimum="4" />
 				</p:inputText>
 			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="input-group">
-				<span class="input-group-addon" id="addonCPF">CPF</span>
+			
+			<div class="input-group" style="margin-top: 5px;">
+				<span class="input-group-addon" id="addonSexo">Sexo</span>
 	
-				<p:inputText value="#{cadastroUsuariosMBean.obj.pessoa.cpf}"
-					required="true" requiredMessage="Campo CPF Obrigatório"
-					maxlength="14" size="14" validator="cpfValidator"
-					onkeypress="mascaraCPF(this);" onchange="mascaraCPF(this);" styleClass="form-control"
-					aria-describedby="addonCPF" />
+				<h:selectOneMenu value="#{cadastroUsuariosMBean.obj.pessoa.sexo}"
+					required="true" requiredMessage="Campo Sexo Obrigatório" id="sexo"
+					styleClass="form-control" aria-describedby="addonConfirmSenha"
+					style="width: 100%;">
+					<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE--"
+						itemDescription="--SELECIONE--" />
+					<f:selectItem itemValue="F" itemLabel="Feminino"
+						itemDescription="Feminino" />
+					<f:selectItem itemValue="M" itemLabel="Masculino"
+						itemDescription="Masculino" />
+				</h:selectOneMenu>
 			</div>
 		</div>
 	</div>
@@ -112,57 +104,14 @@
 	<div class="form-group row">
 		<div class="col-md-6">
 			<div class="input-group">
-				<span class="input-group-addon" id="addonDataNascimento">Data
-					de Nascimento</span>
-	
-				<p:calendar
-					value="#{cadastroUsuariosMBean.obj.pessoa.dataNascimento}"
-					mask="99/99/9999" navigator="true" required="true"
-					requiredMessage="Campo Data de Nascimento Obrigatório" size="14"
-					pattern="dd/MM/yyyy" yearRange="c-100:c" id="dataNascimento" />
+				
 			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="input-group">
-				<span class="input-group-addon" id="addonSexo">Sexo</span>
-	
-				<h:selectOneMenu value="#{cadastroUsuariosMBean.obj.pessoa.sexo}"
-					required="true" requiredMessage="Campo Sexo Obrigatório" id="sexo"
-					styleClass="form-control" aria-describedby="addonConfirmSenha"
-					style="width: 100%;">
-					<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE--"
-						itemDescription="--SELECIONE--" />
-					<f:selectItem itemValue="F" itemLabel="Feminino"
-						itemDescription="Feminino" />
-					<f:selectItem itemValue="M" itemLabel="Masculino"
-						itemDescription="Masculino" />
-				</h:selectOneMenu>
+				
 			</div>
 		</div>
 	</div>
 	
-	<div class="form-group row">
-		<div class="col-md-6">
-			<div class="input-group">
-				<span class="input-group-addon" id="addonCidade">Cidade</span>
-				<p:inputText value="#{cadastroUsuariosMBean.obj.pessoa.cidade}"
-					required="true" requiredMessage="Campo Cidade Obrigatório"
-					styleClass="form-control" aria-describedby="addonCidade" />
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="input-group">
-				<span class="input-group-addon" id="addonSexo">UF</span>
-				<h:selectOneMenu value="#{cadastroUsuariosMBean.obj.pessoa.uf}"
-					required="true" requiredMessage="Campo UF Obrigatório"
-					styleClass="form-control" aria-describedby="addonConfirmSenha"
-					style="width: 100%;">
-					<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE--"
-						itemDescription="--SELECIONE--" />
-					<f:selectItems value="#{uFMBean.allUFsCombo}" />
-				</h:selectOneMenu>
-			</div>
-		</div>
-	</div>
-
 </ui:composition>

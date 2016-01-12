@@ -9,6 +9,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/templates/template_autenticado.xhtml">
 	
+	<ui:param name="opcaoAtiva" value="#{menuPrincipalMBean.menuAlterarPerfil}" />
+	
 	<ui:define name="conteudo">
 		
 		<div class="jumbotron jumbotron-medio">
@@ -23,10 +25,6 @@
 			  	
 			    <p:commandButton value="Salvar" styleClass="btn btn-primary"
 						action="#{cadastroUsuariosMBean.salvar}" ajax="false"/>
-			    
-			    <script>
-			    	resolverConflitoBootstrap("dataNascimento_input", "addonDataNascimento");
-			    </script>
 			    
 		    </h:form>
 	    </div>

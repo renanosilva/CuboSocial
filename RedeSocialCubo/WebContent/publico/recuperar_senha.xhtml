@@ -15,8 +15,9 @@
 	        <h1>Recuperar Senha</h1>
 	        <p>
 	        	Caro usuário, <br/>
-				para recuperar seus dados, por favor informe seu CPF. Será enviada uma
-				mensagem para seu email cadastrado, contendo as informações solicitadas.
+				para recuperar seus dados, por favor informe seu email de cadastro. 
+				Caso seja um email válido, será enviada uma mensagem para ele, contendo 
+				as informações solicitadas.
 	        </p>
 	      </div>
 	    </div>
@@ -24,10 +25,10 @@
 	    <div class="container">
 	    	 <h:form id="form">
     	 		<div class="input-group centralizado" style="width: 50%;" align="center">
-				  <span class="input-group-addon" id="basic-addon1">CPF</span>
-				  <p:inputText styleClass="form-control" value="#{recuperarSenhaMBean.cpf}" required="true" requiredMessage="Campo CPF Obrigatório" 
-							maxlength="14" size="14" validator="cpfValidator" aria-describedby="basic-addon1"
-							onkeypress="mascaraCPF(this);"/>
+				  <span class="input-group-addon" id="basic-addon1">Email</span>
+				  <p:inputText styleClass="form-control" value="#{recuperarSenhaMBean.email}" 
+				  		required="true" requiredMessage="Campo Email Obrigatório" 
+						aria-describedby="basic-addon1"/>
 				</div>
 				<br/>
 				<div class="centralizado" style="width: 50%; text-align: center;">

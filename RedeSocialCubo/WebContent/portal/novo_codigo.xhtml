@@ -8,6 +8,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/templates/template_autenticado.xhtml">
 	
+	<ui:param name="opcaoAtiva" value="#{menuPrincipalMBean.menuNovoCodigo}" />
+	
 	<ui:define name="conteudo">
 		<!-- Editor de código -->
 		<!-- Create a simple CodeMirror instance -->
