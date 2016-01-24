@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>  
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/template_autenticado.xhtml">
+	
+	<ui:param name="opcaoAtiva" value="#{menuPrincipalMBean.menuVisualizarCubos}" />
+	
+	<ui:define name="conteudo">
+		<div class="jumbotron jumbotron-medio">
+	      <div class="container">
+	        <h1>
+	        	Visualizar Cubos
+	        </h1>
+	      </div>
+	    </div>
+	    
+	    <div class="container">
+	    	 <h:form prependId="false">
+	    	 
+		    	 <div class="form-group row">
+					<div class="col-md-12">
+				    	<div class="input-group" style="width: 70%; margin: auto;">
+							<span class="input-group-addon" id="addonCubo">
+								Cubo
+							</span>
+							
+							<h:selectOneMenu styleClass="form-control"
+								value="#{visualizarCuboMBean.obj.id}">
+								<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE O CUBO--"
+									itemDescription="--SELECIONE O CUBO--" />
+								<f:selectItems value="#{cuboMBean.selectCubos}" />
+								
+								<p:ajax event="change" listener="#{visualizarCuboMBean.carregarUrlStreaming}" update="panelStreaming"/>
+							</h:selectOneMenu>
+						</div>
+				    	
+				    	<br/>
+				    	
+				    	<h:panelGroup id="panelStreaming">
+					    	<div class="frameStreaming" style="width: 70%; margin: auto;">
+					    		<video width="100%" controls="controls">
+								    <source src="${visualizarCuboMBean.obj.url}" type="video/ogg" />
+								</video>
+					    	</div>
+				    	</h:panelGroup>
+					</div>
+				</div>
+			</h:form>
+	    </div>
+	</ui:define>
+
+</ui:composition>

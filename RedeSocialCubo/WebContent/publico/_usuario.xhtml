@@ -37,7 +37,10 @@
 		
 		<div class="col-md-6" style="height: 128px;">
 			<div class="input-group" style="margin-top: 5px;">
-				<span class="input-group-addon" id="addonNome">Nome</span>
+				<span class="input-group-addon" id="addonNome">
+					Nome
+					<h:graphicImage url="/resources/img/required.gif" title="Campo Obrigatório"/>
+				</span>
 				
 				<p:inputText styleClass="form-control"
 					value="#{cadastroUsuariosMBean.obj.pessoa.nomeSobrenome}" required="true"
@@ -46,7 +49,10 @@
 			</div>
 			
 			<div class="input-group" style="margin-top: 5px;">
-				<span class="input-group-addon" id="addonLogin">Email</span>
+				<span class="input-group-addon" id="addonLogin">
+					Email
+					<h:graphicImage url="/resources/img/required.gif" title="Campo Obrigatório"/>
+				</span>
 				<p:inputText styleClass="form-control"
 					value="#{cadastroUsuariosMBean.obj.email}" required="true"
 					requiredMessage="Campo Email Obrigatório" size="40"
@@ -56,7 +62,10 @@
 			</div>
 			
 			<div class="input-group" style="margin-top: 5px;">
-				<span class="input-group-addon" id="addonSexo">Sexo</span>
+				<span class="input-group-addon" id="addonSexo">
+					Sexo
+					<h:graphicImage url="/resources/img/required.gif" title="Campo Obrigatório"/>
+				</span>
 	
 				<h:selectOneMenu value="#{cadastroUsuariosMBean.obj.pessoa.sexo}"
 					required="true" requiredMessage="Campo Sexo Obrigatório" id="sexo"
@@ -76,7 +85,11 @@
 	<div class="form-group row">
 		<div class="col-md-6">
 			<div class="input-group">
-				<span class="input-group-addon" id="addonSenha">Senha</span>
+				<span class="input-group-addon" id="addonSenha">
+					Senha
+					<h:graphicImage url="/resources/img/required.gif" title="Campo Obrigatório"
+						rendered="#{cadastroUsuariosMBean.obj.id == 0}"/>
+				</span>
 				
 				<p:password value="#{cadastroUsuariosMBean.obj.senha}" id="senhaCadastro"
 					required="#{cadastroUsuariosMBean.obj.id == 0}" requiredMessage="Campo Senha Obrigatório"
@@ -88,8 +101,11 @@
 		</div>
 		<div class="col-md-6">
 			<div class="input-group">
-				<span class="input-group-addon" id="addonConfirmSenha">Confirmar
-					Senha</span>
+				<span class="input-group-addon" id="addonConfirmSenha">
+					Confirmar Senha
+					<h:graphicImage url="/resources/img/required.gif" title="Campo Obrigatório"
+						rendered="#{cadastroUsuariosMBean.obj.id == 0}"/>
+				</span>
 	
 				<p:password value="#{cadastroUsuariosMBean.obj.novaSenhaConfirmacao}"
 					required="#{cadastroUsuariosMBean.obj.id == 0}" requiredMessage="Campo Confirmar Senha Obrigatório"
@@ -97,19 +113,6 @@
 					styleClass="form-control" aria-describedby="addonConfirmSenha">
 				</p:password>
 	
-			</div>
-		</div>
-	</div>
-	
-	<div class="form-group row">
-		<div class="col-md-6">
-			<div class="input-group">
-				
-			</div>
-		</div>
-		<div class="col-md-6">
-			<div class="input-group">
-				
 			</div>
 		</div>
 	</div>

@@ -18,13 +18,38 @@
 	        	Aprenda se divertindo! Comece hoje mesmo a programar animações e efeitos 
 	        	para os cubos de LED do IMD-UFRN.
 	        </p>
-	        <p><a class="btn btn-primary btn-lg" href="sobre.xhtml" role="button">Saiba mais</a></p>
 	      </div>
 	    </div>
 	    
 	    <div class="container">
-	    	
-	    </div>
+    		<h:form styleClass="form-signin" >
+		        <!-- <h2 class="form-signin-heading">Login</h2> -->
+		        
+		        <div class="form-group row">
+			        <label for="inputEmail" class="sr-only">Email</label>
+			        <p:inputText value="#{loginMBean.usuario.email}" placeholder="Email"
+			    			styleClass="form-control"/>
+		        </div>
+		        
+		        <div class="form-group row">
+			        <label for="inputPassword" class="sr-only">Senha</label>
+			        <p:password value="#{loginMBean.usuario.senha}" placeholder="Senha"
+				    			styleClass="form-control" id="inputPassword"/>
+		        </div>
+		        
+		        <div class="form-group row">
+			        <h:commandButton styleClass="btn btn-lg btn-primary btn-block" action="#{loginMBean.autenticar}"
+				            	value="Entrar"/>
+			    </div>
+			    
+			    <div class="form-group row">
+				    <h:commandLink action="#{recuperarSenhaMBean.entrarRecuperarSenha}"
+			            		value="Esqueceu sua senha?"/>
+		        </div>
+		        
+	    	</h:form>
+	      </div>
+	    
 	</ui:define>
 
 </ui:composition>

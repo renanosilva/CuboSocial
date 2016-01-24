@@ -3,12 +3,15 @@ package br.ufrn.imd.cubo.geral.negocio;
 import java.util.Arrays;
 import java.util.List;
 
+import br.ufrn.imd.cubo.arq.dao.GenericDAOImpl;
+import br.ufrn.imd.cubo.arq.dao.IGenericDAO;
 import br.ufrn.imd.cubo.arq.exception.ArqException;
 import br.ufrn.imd.cubo.arq.exception.NegocioException;
 import br.ufrn.imd.cubo.arq.negocio.ProcessadorCadastro;
 import br.ufrn.imd.cubo.arq.util.EnvioArquivoUtils;
 import br.ufrn.imd.cubo.arq.util.ValidatorUtil;
 import br.ufrn.imd.cubo.geral.dominio.Codigo;
+import br.ufrn.imd.cubo.geral.dominio.Cubo;
 
 /** 
  * Classe responsável por realizar cadastro/alteração de usuários.
@@ -60,6 +63,11 @@ public class ProcessadorCadastraCodigo extends ProcessadorCadastro {
 				arq.inserirArquivo(obj.getIdVideo(), obj.getArquivoVideo().getFileName(), 
 						obj.getArquivoVideo().getContents());
 			}
+			
+			//Evitando erros de lazy
+			IGenericDAO dao = new GenericDAOImpl();
+			dao.detach(obj.getCubo());
+			obj.setCubo(dao.findByPrimaryKey(obj.getCubo().getId(), Cubo.class));
 			
 			super.iniciarExecucao();
 			

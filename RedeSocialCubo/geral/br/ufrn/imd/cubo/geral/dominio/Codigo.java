@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -73,6 +75,11 @@ public class Codigo extends PersistDBRecorded {
 	/** Número total de comentários da publicação. Serve para evitar consultas extras ao banco. */
 	@Column(name="qtd_comentarios", nullable = false)
 	private int qtdComentarios;
+	
+	/** Refere-se ao cubo para o qual o código foi projetado. */
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="id_cubo", nullable=false)
+	private Cubo cubo;
 	
 	/** Curtidas que a publicação recebeu. */
 	@OneToMany(mappedBy = "publicacao", fetch = FetchType.LAZY, cascade=CascadeType.REMOVE)
@@ -327,6 +334,14 @@ public class Codigo extends PersistDBRecorded {
 
 	public void setNotaUsuarioLogado(Integer notaUsuarioLogado) {
 		this.notaUsuarioLogado = notaUsuarioLogado;
+	}
+
+	public Cubo getCubo() {
+		return cubo;
+	}
+
+	public void setCubo(Cubo cubo) {
+		this.cubo = cubo;
 	}
 	
 }

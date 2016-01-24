@@ -33,12 +33,6 @@ import br.ufrn.imd.cubo.geral.negocio.ProcessadorExcluiComentario;
 @ViewScoped
 public class VisualizarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 	
-	/** 
-	 * Utilizado para salvar os dados da timeline, enquanto o usário estiver na visualização
-	 * de detalhes de código. Necessário para o caso de o usuário querer voltar à timeline.  
-	 * */
-	private TimelineMBean timelineMBean;
-	
 	/** Comentário que está sendo inserido no momento. */
 	private Comentario comentario;
 	
@@ -243,12 +237,4 @@ public class VisualizarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 		this.irParaComentarios = irParaComentarios;
 	}
 
-	public TimelineMBean getTimelineMBean() {
-		return timelineMBean;
-	}
-
-	public void setTimelineMBean(TimelineMBean timelineMBean) {
-		this.timelineMBean = timelineMBean;
-	}
-	
 }

@@ -71,7 +71,8 @@
 			            </li>
 			            <li>
 			            	<h:commandLink value="Visualizar Cubos"
-			            		styleClass="linkMenuTopo #{opcaoAtiva == menuPrincipalMBean.menuVisualizarCubos ? 'ativo' : ''}">
+			            		styleClass="linkMenuTopo #{opcaoAtiva == menuPrincipalMBean.menuVisualizarCubos ? 'ativo' : ''}"
+			            		action="#{visualizarCuboMBean.entrar}">
 			            	</h:commandLink>
 			            </li>
 			          </ul>

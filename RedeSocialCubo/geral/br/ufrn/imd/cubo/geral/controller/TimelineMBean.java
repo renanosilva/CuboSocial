@@ -54,11 +54,19 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 	/** 
 	 * Tipos existentes de timeline.<br/>
 	 * NORMAL: exibe todas as publicações existentes, de todos os usuários.<br/>
+	 * MEUS_CODIGOS: exibe apenas os códigos do usuário logado.<br/>
+	 * */
+	private enum TipoTimeline {
+		NORMAL, MEUS_CODIGOS;
+	}
+	
+	/** 
+	 * Tipos existentes de código.<br/>
 	 * MEUS_CODIGOS_PUBLICADOS: exibe apenas os códigos do usuário logado que estão publicados.<br/>
 	 * MEUS_RASCUNHOS: exibe apenas os códigos do usuário logado que não foram publicados ainda.
 	 * */
-	private enum TipoTimeline {
-		NORMAL, MEUS_CODIGOS_PUBLICADOS, MEUS_RASCUNHOS;
+	private enum TipoCodigo {
+		MEUS_CODIGOS_PUBLICADOS, MEUS_RASCUNHOS;
 	}
 	
 	/** Opção selecionada pelo usuário */
@@ -66,6 +74,12 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 	
 	/** Armazena o tipo de timeline selecionado no momento. */
 	private TipoTimeline tipoTimeline;
+	
+	/** Armazena o tipo de timeline selecionada na busca do usuário. */
+	private TipoCodigo tipoCodigoBusca;
+	
+	/** Armazena o ID do cubo pelo qual o usuário deseja filtrar a busca. */
+	private Integer idTipoCubo;
 	
 	/** Armazena as opções de paginação de consulta a códigos. */
 	private PagingInformation paginacao;
@@ -78,8 +92,10 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 		paginacao = new PagingInformation(0, QTD_CODIGOS);
 		
 		tipoTimeline = TipoTimeline.NORMAL;
+		tipoCodigoBusca = null;
 		tituloBusca = null;
 		opcao = null;
+		idTipoCubo = null;
 	}
 	
 	/** Entra na tela da timeline. */
@@ -89,7 +105,7 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 		String meusCodigos = getParameter("meusCodigos");
 		
 		if (meusCodigos != null && meusCodigos.equals("true")){
-			tipoTimeline = TipoTimeline.MEUS_CODIGOS_PUBLICADOS;
+			tipoTimeline = TipoTimeline.MEUS_CODIGOS;
 		}
 		
 		return Paginas.PORTAL_INICIO;
@@ -103,6 +119,7 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 	public String buscar(){
 		//Setando códigos para null para poder buscar novamente, via getCodigos()
 		codigos = null;
+		paginacao = new PagingInformation(0, QTD_CODIGOS);
 		
 		return null;
 	}
@@ -264,16 +281,22 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 									opcao == OpcaoOrdenar.MELHORES_AVALIADAS ? "nota DESC" :
 									opcao == OpcaoOrdenar.PIORES_AVALIADAS ? "nota ASC" : null;
 				
-				Boolean finalizados = (tipoTimeline == TipoTimeline.NORMAL || tipoTimeline == TipoTimeline.MEUS_CODIGOS_PUBLICADOS) ? true : 
-										tipoTimeline == TipoTimeline.MEUS_RASCUNHOS ? false : null;
+				Boolean finalizados = null;
+				
+				if (tipoTimeline == TipoTimeline.NORMAL || 
+						(tipoTimeline == TipoTimeline.MEUS_CODIGOS && tipoCodigoBusca == TipoCodigo.MEUS_CODIGOS_PUBLICADOS)){
+					finalizados = true;
+				} else if (tipoCodigoBusca == TipoCodigo.MEUS_RASCUNHOS){
+					finalizados = false;
+				}
 				
 				Integer criadoPor = tipoTimeline == TipoTimeline.NORMAL ? null : 
-										(tipoTimeline == TipoTimeline.MEUS_CODIGOS_PUBLICADOS 
-											|| tipoTimeline == TipoTimeline.MEUS_RASCUNHOS) ? getUsuarioLogado().getId() : null;
+										tipoTimeline == TipoTimeline.MEUS_CODIGOS ? getUsuarioLogado().getId() : null;
 				
 				codigos = dao.findCodigoGeral(tituloBusca, ordenar, 
 						finalizados, 
-						criadoPor, 
+						criadoPor,
+						idTipoCubo,
 						paginacao);
 				
 				//Buscando quais dos códigos encontrados o usuário avaliou
@@ -382,24 +405,40 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 		return TipoTimeline.NORMAL;
 	}
 	
-	public TipoTimeline getTipoTimelineCodigosPublicados() {
-		return TipoTimeline.MEUS_CODIGOS_PUBLICADOS;
-	}
-	
-	public TipoTimeline getTipoTimelineRascunhos() {
-		return TipoTimeline.MEUS_RASCUNHOS;
+	public TipoTimeline getTipoTimelineMeusCodigos() {
+		return TipoTimeline.MEUS_CODIGOS;
 	}
 	
 	public boolean isTimelineNormal(){
 		return tipoTimeline == getTipoTimelineNormal();
 	}
 	
-	public boolean isMeusCodigosPublicados(){
-		return tipoTimeline == getTipoTimelineCodigosPublicados();
+	public boolean isMeusCodigos(){
+		return tipoTimeline == getTipoTimelineMeusCodigos();
+	}
+
+	public Integer getIdTipoCubo() {
+		return idTipoCubo;
+	}
+
+	public void setIdTipoCubo(Integer idTipoCubo) {
+		this.idTipoCubo = idTipoCubo;
+	}
+
+	public TipoCodigo getTipoCodigoBusca() {
+		return tipoCodigoBusca;
+	}
+
+	public void setTipoCodigoBusca(TipoCodigo tipoCodigoBusca) {
+		this.tipoCodigoBusca = tipoCodigoBusca;
 	}
 	
-	public boolean isMeusRascunhos(){
-		return tipoTimeline == getTipoTimelineRascunhos();
+	public TipoCodigo getTipoCodigosPublicados() {
+		return TipoCodigo.MEUS_CODIGOS_PUBLICADOS;
+	}
+	
+	public TipoCodigo getTipoCodigosRascunhos() {
+		return TipoCodigo.MEUS_RASCUNHOS;
 	}
 	
 }

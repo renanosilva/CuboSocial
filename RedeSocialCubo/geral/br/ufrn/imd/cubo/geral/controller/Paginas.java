@@ -26,4 +26,6 @@ public class Paginas {
 	
 	public static final String NOVO_CODIGO = "/portal/novo_codigo.xhtml";
 	
+	public static final String VISUALIZAR_CUBO = "/portal/visualizar_cubo.xhtml";
+	
 }

@@ -93,7 +93,7 @@ public class CodigoDAO extends GenericDAOImpl {
 	
 	/** Busca geral de publicações de código. */
 	public List<Codigo> findCodigoGeral(String titulo, String orderBy, Boolean finalizado, 
-			Integer idCriadoPor, PagingInformation paginacao) throws Exception{
+			Integer idCriadoPor, Integer idTipoCubo, PagingInformation paginacao) throws Exception{
 		EntityManager em = getEm();
 		
 		String hql = " FROM Codigo c WHERE 1=1 ";
@@ -106,6 +106,9 @@ public class CodigoDAO extends GenericDAOImpl {
 		}
 		if (ValidatorUtil.isNotEmpty(idCriadoPor)){
 			hql += " AND c.criadoPor.id = :idCriadoPor ";
+		}
+		if (ValidatorUtil.isNotEmpty(idTipoCubo)){
+			hql += " AND c.cubo.id = :idTipoCubo ";
 		}
 		if (ValidatorUtil.isNotEmpty(orderBy)){
 			hql += " order by " + orderBy;
@@ -121,6 +124,9 @@ public class CodigoDAO extends GenericDAOImpl {
 		}
 		if (ValidatorUtil.isNotEmpty(idCriadoPor)){
 			q.setParameter("idCriadoPor", idCriadoPor);
+		}
+		if (ValidatorUtil.isNotEmpty(idTipoCubo)){
+			q.setParameter("idTipoCubo", idTipoCubo);
 		}
 		
 		try {
@@ -139,6 +145,9 @@ public class CodigoDAO extends GenericDAOImpl {
 				}
 				if (ValidatorUtil.isNotEmpty(idCriadoPor)){
 					qPaginacao.setParameter("idCriadoPor", idCriadoPor);
+				}
+				if (ValidatorUtil.isNotEmpty(idTipoCubo)){
+					qPaginacao.setParameter("idTipoCubo", idTipoCubo);
 				}
 				
 				paginacao.setTotalRegistros((int) ((Long) qPaginacao.getSingleResult()).longValue());

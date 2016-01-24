@@ -25,7 +25,10 @@
 	    <div class="container">
 	    	 <h:form id="form">
     	 		<div class="input-group centralizado" style="width: 50%;" align="center">
-				  <span class="input-group-addon" id="basic-addon1">Email</span>
+				  <span class="input-group-addon" id="basic-addon1">
+				  	Email
+				  	<h:graphicImage url="/resources/img/required.gif" title="Campo Obrigatório"/>
+				  </span>
 				  <p:inputText styleClass="form-control" value="#{recuperarSenhaMBean.email}" 
 				  		required="true" requiredMessage="Campo Email Obrigatório" 
 						aria-describedby="basic-addon1"/>

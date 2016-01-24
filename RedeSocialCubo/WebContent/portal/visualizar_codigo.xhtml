@@ -165,7 +165,26 @@
 				</div>
 				
 				<div class="col-md-4">
-					<ui:include src="_streaming.xhtml"/>
+					<h:form>
+				    	<div class="input-group">
+					    	<span class="input-group-addon" id="addonCuboStreaming">
+								Cubo
+							</span>
+							
+							<p:inputText value="#{visualizarCodigoMBean.obj.cubo.nome}"
+								aria-describedby="addonTitulo" readonly="true"
+								style="width: 100%;"/>
+						</div>
+					    
+					    <br/>
+				    	
+				    	<div class="frameStreaming">
+				    		<video width="100%" controls="controls">
+							    <source src="#{visualizarCodigoMBean.obj.cubo.url}" type="video/ogg" />
+							</video>
+				    	</div>
+			    	
+				    </h:form>
 				</div>
 			</div>
 			

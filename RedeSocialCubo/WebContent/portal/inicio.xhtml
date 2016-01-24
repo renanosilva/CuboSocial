@@ -16,76 +16,173 @@
 		<!-- dotdotdot -->
 		<script src="/${ctx}/resources/js/jquery.dotdotdot.min.js"></script>
 		
+		<script>
+			function resetarCampos(){
+				$("#tituloBusca").val('');
+				$("#tipoCodigo").val(null);
+				$("#tipoCubo").val(null);
+				$("#ordenarPor").val(null);
+				
+				return false;
+			}
+		</script>
+		
 		<h:outputText value="#{timelineMBean.carregarCodigos}" id="carregarCodigos"/>
 		
 		<div class="container">
 			<h:form prependId="false">
 				<br/>
-				<div class="form-group row">
-					<div class="${timelineMBean.timelineNormal ? 'col-md-5' : 'col-md-4'}">
-						<div class="input-group">
-							<span class="input-group-addon" id="addonFitrar">Filtrar por Título</span>
 				
-							<p:inputText styleClass="form-control"
-								value="#{timelineMBean.tituloBusca}" size="40"
-								aria-describedby="addonFiltrar" 
-								id="tituloBusca"/>
-						</div>
-					</div>
+				<h:panelGroup rendered="#{timelineMBean.timelineNormal}">
+					<div class="form-group row">
+						<div class="col-md-4">
+							<div class="input-group">
+								<span class="input-group-addon" id="addonFitrar">Filtrar por Título</span>
 					
-					<h:panelGroup rendered="#{timelineMBean.meusCodigosPublicados or timelineMBean.meusRascunhos}">
+								<p:inputText styleClass="form-control"
+									value="#{timelineMBean.tituloBusca}" size="40"
+									aria-describedby="addonFiltrar" />
+							</div>
+						</div>
+						
 						<div class="col-md-3">
 							<div class="input-group">
-								<span class="input-group-addon" id="addonFiltrarTipoTimeline">Filtrar por</span>
+								<span class="input-group-addon" id="addonFiltrarTipoCubo">Tipo de Cubo</span>
 					
-								<h:selectOneMenu value="#{timelineMBean.tipoTimeline}"
+								<h:selectOneMenu value="#{timelineMBean.idTipoCubo}"
+									styleClass="form-control" aria-describedby="addonFiltrarTipoCubo">
+									
+									<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE--"
+										itemDescription="--SELECIONE--" />
+									<f:selectItems value="#{cuboMBean.selectCubos}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+					
+						<div class="col-md-3">
+							<div class="input-group">
+								<span class="input-group-addon" id="addonOrdenar">Ordenar por</span>
+					
+								<h:selectOneMenu value="#{timelineMBean.opcao}"
+									styleClass="form-control" aria-describedby="addonOrdenar">
+									<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE--"
+										itemDescription="--SELECIONE--" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarQualquer}" itemLabel="Qualquer"
+										itemDescription="Qualquer" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMaisRecentes}" itemLabel="Mais Recentes"
+										itemDescription="Mais Recentes" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMaisAntigas}" itemLabel="Mais Antigas"
+										itemDescription="Mais Antigas" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMaisCurtidas}" itemLabel="Mais Curtidas"
+										itemDescription="Mais Curtidas" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMenosCurtidas}" itemLabel="Menos Curtidas"
+										itemDescription="Menos Curtidas" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMaisComentadas}" itemLabel="Mais Comentadas"
+										itemDescription="Mais Comentadas" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMenosComentadas}" itemLabel="Menos Comentadas"
+										itemDescription="Menos Comentadas" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMelhoresAvaliacoes}" itemLabel="Melhores Avaliações"
+										itemDescription="Melhores Avaliações" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarPioresAvaliacoes}" itemLabel="Piores Avaliações"
+										itemDescription="Piores Avaliações" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<p:commandButton value="Buscar" styleClass="form-control btn btn-primary btn-xs"
+								action="#{timelineMBean.buscar}" ajax="false"/>
+						</div>
+					</div>
+				</h:panelGroup>
+				
+				<h:panelGroup rendered="#{timelineMBean.meusCodigos}">
+					<div class="form-group row">
+						<div class="col-md-5">
+							<div class="input-group">
+								<span class="input-group-addon" id="addonFitrar">Filtrar por Título</span>
+					
+								<p:inputText styleClass="form-control"
+									value="#{timelineMBean.tituloBusca}" size="40"
+									aria-describedby="addonFiltrar"
+									id="tituloBusca"/>
+							</div>
+						</div>
+						
+						<div class="col-md-5">
+							<div class="input-group">
+								<span class="input-group-addon" id="addonFiltrarTipoTimeline">Tipo de Código</span>
+					
+								<h:selectOneMenu value="#{timelineMBean.tipoCodigoBusca}" id="tipoCodigo"
 									styleClass="form-control" aria-describedby="addonFiltrarTipoTimeline">
 									<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE--"
 										itemDescription="--SELECIONE--" />
-									<f:selectItem itemValue="#{timelineMBean.tipoTimelineCodigosPublicados}" itemLabel="Meus Códigos Publicados"
+									<f:selectItem itemValue="#{timelineMBean.tipoCodigosPublicados}" itemLabel="Meus Códigos Publicados"
 										itemDescription="Meus Códigos Publicados" />
-									<f:selectItem itemValue="#{timelineMBean.tipoTimelineRascunhos}" itemLabel="Meus Rascunhos"
+									<f:selectItem itemValue="#{timelineMBean.tipoCodigosRascunhos}" itemLabel="Meus Rascunhos"
 										itemDescription="Meus Rascunhos" />
 								</h:selectOneMenu>
 							</div>
 						</div>
-					</h:panelGroup>
-				
-					<div class="${timelineMBean.timelineNormal ? 'col-md-5' : 'col-md-3'}">
-						<div class="input-group">
-							<span class="input-group-addon" id="addonOrdenar">Ordenar por</span>
-				
-							<h:selectOneMenu value="#{timelineMBean.opcao}"
-								styleClass="form-control" aria-describedby="addonOrdenar">
-								<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE--"
-									itemDescription="--SELECIONE--" />
-								<f:selectItem itemValue="#{timelineMBean.ordenarQualquer}" itemLabel="Qualquer"
-									itemDescription="Qualquer" />
-								<f:selectItem itemValue="#{timelineMBean.ordenarMaisRecentes}" itemLabel="Mais Recentes"
-									itemDescription="Mais Recentes" />
-								<f:selectItem itemValue="#{timelineMBean.ordenarMaisAntigas}" itemLabel="Mais Antigas"
-									itemDescription="Mais Antigas" />
-								<f:selectItem itemValue="#{timelineMBean.ordenarMaisCurtidas}" itemLabel="Mais Curtidas"
-									itemDescription="Mais Curtidas" />
-								<f:selectItem itemValue="#{timelineMBean.ordenarMenosCurtidas}" itemLabel="Menos Curtidas"
-									itemDescription="Menos Curtidas" />
-								<f:selectItem itemValue="#{timelineMBean.ordenarMaisComentadas}" itemLabel="Mais Comentadas"
-									itemDescription="Mais Comentadas" />
-								<f:selectItem itemValue="#{timelineMBean.ordenarMenosComentadas}" itemLabel="Menos Comentadas"
-									itemDescription="Menos Comentadas" />
-								<f:selectItem itemValue="#{timelineMBean.ordenarMelhoresAvaliacoes}" itemLabel="Melhores Avaliações"
-									itemDescription="Melhores Avaliações" />
-								<f:selectItem itemValue="#{timelineMBean.ordenarPioresAvaliacoes}" itemLabel="Piores Avaliações"
-									itemDescription="Piores Avaliações" />
-							</h:selectOneMenu>
+						
+						<div class="col-md-2">
+							<input type="reset" class="form-control btn btn-default btn-xs" value="Limpar Filtros"
+								onclick="return resetarCampos();"/>
 						</div>
 					</div>
 					
-					<div class="col-md-2">
-						<p:commandButton value="Buscar" styleClass="form-control btn btn-primary btn-xs"
-							action="#{timelineMBean.buscar}" ajax="false"/>
+					<div class="form-group row">
+						<div class="col-md-5">
+							<div class="input-group">
+								<span class="input-group-addon" id="addonFiltrarTipoCubo">Tipo de Cubo</span>
+					
+								<h:selectOneMenu value="#{timelineMBean.idTipoCubo}" id="tipoCubo"
+									styleClass="form-control" aria-describedby="addonFiltrarTipoCubo">
+									
+									<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE O CUBO--"
+										itemDescription="--SELECIONE O CUBO--" />
+									<f:selectItems value="#{cuboMBean.selectCubos}" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						
+						<div class="col-md-5">
+							<div class="input-group">
+								<span class="input-group-addon" id="addonOrdenar">Ordenar por</span>
+					
+								<h:selectOneMenu value="#{timelineMBean.opcao}" id="ordenarPor"
+									styleClass="form-control" aria-describedby="addonOrdenar">
+									<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE--"
+										itemDescription="--SELECIONE--" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarQualquer}" itemLabel="Qualquer"
+										itemDescription="Qualquer" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMaisRecentes}" itemLabel="Mais Recentes"
+										itemDescription="Mais Recentes" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMaisAntigas}" itemLabel="Mais Antigas"
+										itemDescription="Mais Antigas" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMaisCurtidas}" itemLabel="Mais Curtidas"
+										itemDescription="Mais Curtidas" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMenosCurtidas}" itemLabel="Menos Curtidas"
+										itemDescription="Menos Curtidas" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMaisComentadas}" itemLabel="Mais Comentadas"
+										itemDescription="Mais Comentadas" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMenosComentadas}" itemLabel="Menos Comentadas"
+										itemDescription="Menos Comentadas" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarMelhoresAvaliacoes}" itemLabel="Melhores Avaliações"
+										itemDescription="Melhores Avaliações" />
+									<f:selectItem itemValue="#{timelineMBean.ordenarPioresAvaliacoes}" itemLabel="Piores Avaliações"
+										itemDescription="Piores Avaliações" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<p:commandButton value="Buscar" styleClass="form-control btn btn-primary btn-xs"
+								action="#{timelineMBean.buscar}" ajax="false"/>
+						</div>
 					</div>
-				</div>
+				</h:panelGroup>
+				
 			</h:form>
 			
 			<h:form id="formCodigos" prependId="false">

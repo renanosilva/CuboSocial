@@ -30,11 +30,15 @@
 	    </div>
 	    
 	    <div class="container">
-	    	 <div class="form-group row">
-				<div class="col-md-8">
-			    	 <h:form prependId="false" enctype="multipart/form-data">
+	    	 <h:form prependId="false" enctype="multipart/form-data">
+	    	 
+		    	 <div class="form-group row">
+					<div class="col-md-8">
 			    	 	<div class="input-group">
-							<span class="input-group-addon" id="addonTitulo">Título</span>
+							<span class="input-group-addon" id="addonTitulo">
+								Título
+								<h:graphicImage url="/resources/img/required.gif" title="Campo Obrigatório"/>
+							</span>
 							
 							<p:inputText styleClass="form-control"
 								value="#{novoCodigoMBean.obj.titulo}" required="true"
@@ -55,7 +59,10 @@
 						<br/>
 						
 						<div class="input-group">
-							<span class="input-group-addon" id="addonCodigo">Código</span>
+							<span class="input-group-addon" id="addonCodigo">
+								Código
+								<h:graphicImage url="/resources/img/required.gif" title="Campo Obrigatório"/>
+							</span>
 							
 							<p:inputTextarea styleClass="form-control"
 								required="true" requiredMessage="Campo Código Obrigatório"
@@ -91,13 +98,38 @@
 						
 						<p:commandButton value="Salvar e Publicar" styleClass="btn btn-primary"
 								action="#{novoCodigoMBean.salvar(false)}" ajax="false"/>
-				    </h:form>
+					</div>
+					
+					<div class="col-md-4">
+				    	<div class="input-group">
+							<span class="input-group-addon" id="addonCubo">
+								Cubo
+								<h:graphicImage url="/resources/img/required.gif" title="Campo Obrigatório"/>
+							</span>
+							
+							<h:selectOneMenu styleClass="form-control"
+								required="true" requiredMessage="Campo Cubo Obrigatório"
+								value="#{novoCodigoMBean.obj.cubo.id}">
+								<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE O CUBO--"
+									itemDescription="--SELECIONE O CUBO--" />
+								<f:selectItems value="#{cuboMBean.selectCubos}" />
+								
+								<p:ajax event="change" listener="#{novoCodigoMBean.carregarUrlStreaming}" update="panelStreaming"/>
+							</h:selectOneMenu>
+						</div>
+				    	
+				    	<br/>
+				    	
+				    	<h:panelGroup id="panelStreaming">
+					    	<div class="frameStreaming">
+					    		<video width="100%" controls="controls">
+								    <source src="${novoCodigoMBean.urlStreaming}" type="video/ogg" />
+								</video>
+					    	</div>
+				    	</h:panelGroup>
+					</div>
 				</div>
-				
-				<div class="col-md-4">
-					<ui:include src="_streaming.xhtml"/>
-				</div>
-			</div>
+			</h:form>
 	    </div>
 	    
 		<script>

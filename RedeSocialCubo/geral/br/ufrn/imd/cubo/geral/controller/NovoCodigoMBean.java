@@ -9,6 +9,7 @@ import br.ufrn.imd.cubo.arq.dao.GenericDAOImpl;
 import br.ufrn.imd.cubo.arq.exception.ArqException;
 import br.ufrn.imd.cubo.arq.exception.NegocioException;
 import br.ufrn.imd.cubo.geral.dominio.Codigo;
+import br.ufrn.imd.cubo.geral.dominio.Cubo;
 import br.ufrn.imd.cubo.geral.negocio.ProcessadorCadastraCodigo;
 
 /** 
@@ -21,10 +22,16 @@ import br.ufrn.imd.cubo.geral.negocio.ProcessadorCadastraCodigo;
 @ViewScoped
 public class NovoCodigoMBean extends AbstractControllerCadastro<Codigo> {
 
+	/** URL de streaming selecionada para visualização. */
+	private String urlStreaming;
+	
 	@PostConstruct
 	private void init() {
 		obj = new Codigo();
+		obj.setCubo(new Cubo());
 		dao = new GenericDAOImpl();
+		
+		urlStreaming = "";
 	}
 	
 	/** Entra na tela de novo código. */
@@ -70,5 +77,23 @@ public class NovoCodigoMBean extends AbstractControllerCadastro<Codigo> {
 	protected String posCadastro() {
 		return Paginas.PORTAL_INICIO;
 	}
+	
+	/** Carrega a URL de streaming do cubo, a partir do ID do cubo que o usuário selecionou. */
+	public void carregarUrlStreaming(){
+		int idCubo = obj.getCubo().getId();
+		
+		if (idCubo > 0){
+			Cubo cubo = dao.findByPrimaryKey(idCubo, Cubo.class);
+			urlStreaming = cubo.getUrl();
+		}
+	}
 
+	public String getUrlStreaming() {
+		return urlStreaming;
+	}
+
+	public void setUrlStreaming(String urlStreaming) {
+		this.urlStreaming = urlStreaming;
+	}
+	
 }
