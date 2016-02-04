@@ -98,6 +98,19 @@ public class GenericDAOImpl implements IGenericDAO {
 		return retorno;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends PersistDB> List<T> findAllAtivos(Class<T> classe, String orderBy) {
+		String tabela = classe.getSimpleName();
+		String jpql = "from "+tabela+ " where ativo = :ativo order by " + orderBy;
+		EntityManager em = getEm();
+		Query q = em.createQuery(jpql);
+		q.setParameter("ativo", true);
+		
+		List<T> retorno = q.getResultList();
+		return retorno;
+	}
+	
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T extends PersistDB> List<T> findAllLike(String coluna,String valor, String orderby, Class<T> classe){

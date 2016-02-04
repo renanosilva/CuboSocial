@@ -32,7 +32,7 @@ public class CuboMBean extends AbstractController {
 
 		if (ValidatorUtil.isEmpty(cubos)){
 			 IGenericDAO dao = new GenericDAOImpl();
-			 cubos = dao.findAllAtivos(Cubo.class);
+			 cubos = dao.findAllAtivos(Cubo.class, "id");
 		}
 		
 		List<SelectItem> result = new ArrayList<SelectItem>();

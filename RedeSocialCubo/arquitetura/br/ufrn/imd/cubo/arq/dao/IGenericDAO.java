@@ -33,6 +33,8 @@ public interface IGenericDAO {
 	public abstract <T extends PersistDB> List<T> findAll(Class<T> classe);
 	
 	public abstract <T extends PersistDB> List<T> findAllAtivos(Class<T> classe);
+	
+	public abstract <T extends PersistDB> List<T> findAllAtivos(Class<T> classe, String orderBy);
 
 	public abstract <T extends PersistDB> List<T> findAllLike(String coluna, String valor, String orderby, Class<T> classe);
 	

@@ -27,10 +27,8 @@ import javax.mail.internet.MimeMessage;
  */
 public class MailHelper {
 
-//	private static final String HOSTNAME = "smtp.gmail.com";
-//	private static final String USERNAME = "sgp.ifrn";
 	private static final String PASSWORD = "cubo.social.imd";
-	private static final String EMAIL_ORIGEM = "cubosocial.imd@gmail.com";
+	public static final String EMAIL_SISTEMA = "cubosocial.imd@gmail.com";
 
 //	private static Email conectaEmail() throws EmailException {
 //		Email email = new SimpleEmail();
@@ -66,7 +64,7 @@ public class MailHelper {
 		Session session = Session.getDefaultInstance(props,
 				new javax.mail.Authenticator() {
 					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(EMAIL_ORIGEM,
+						return new PasswordAuthentication(EMAIL_SISTEMA,
 								PASSWORD);
 					}
 				});
@@ -77,7 +75,7 @@ public class MailHelper {
 		final Message message = new MimeMessage(session);
 		
 		try {
-			message.setFrom(new InternetAddress(EMAIL_ORIGEM, "Cubo Social"));
+			message.setFrom(new InternetAddress(EMAIL_SISTEMA, "Cubo Social"));
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 			return;

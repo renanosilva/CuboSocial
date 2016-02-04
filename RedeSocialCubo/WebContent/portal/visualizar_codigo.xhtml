@@ -48,6 +48,9 @@
 					
 					<h:panelGroup rendered="#{visualizarCodigoMBean.obj != null and visualizarCodigoMBean.obj.id != 0}">
 				    	<h:form id="formCodigo" prependId="false" >
+						    <p:poll listener="#{executarCodigoMBean.atualizarTextoFilaEspera}" interval="30"
+						    	update="msgExecucao" />
+			    		
 							<h:panelGroup id="panelCodigos" rendered="#{visualizarCodigoMBean.obj.id != 0}">
 								
 								<div class="post">
@@ -79,7 +82,10 @@
 										</p:commandButton>
 										
 										<p:commandButton value="Executar" styleClass="btn btn-primary btn-xs"
-											ajax="false"/>
+											ajax="true" actionListener="#{executarCodigoMBean.executar}" 
+											update="msgExecucao">
+											<f:param name="idCodigo" value="#{c.id}"/>
+										</p:commandButton>
 									</div>
 									
 									<div class="tituloPost">${visualizarCodigoMBean.obj.titulo}</div>
@@ -100,6 +106,8 @@
 												value="Média da avaliação dos usuários: #{visualizarCodigoMBean.obj.nota}" />
 										</h:panelGroup>
 									</div>
+									
+									<p:messages id="msgExecucao" escape="false" />
 									
 									<div class="descricaoPost">${visualizarCodigoMBean.obj.descricao}</div>
 									
@@ -252,7 +260,7 @@
 															| 
 															<p:commandLink value="Excluir" actionListener="#{visualizarCodigoMBean.excluirComentario}" ajax="true"
 																update=":panelComentarios"
-																onclick="if (!confirm('Deseja realmente excluir este comentário??')) return false;">
+																onclick="if (!confirm('Deseja realmente excluir este comentário?')) return false;">
 																<f:param name="idComentario" value="#{c.id}"/>
 															</p:commandLink>
 														</h:panelGroup>

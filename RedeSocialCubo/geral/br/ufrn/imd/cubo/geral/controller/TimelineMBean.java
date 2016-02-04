@@ -139,7 +139,8 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 			
 			//Atualizando registro
 			
-			publicacao = dao.findByPrimaryKey(publicacao.getId(), Codigo.class);
+			//publicacao = dao.findByPrimaryKey(publicacao.getId(), Codigo.class);
+			dao.refresh(publicacao);
 			int pos = codigos.indexOf(publicacao);
 			codigos.set(pos, publicacao);
 			
@@ -304,14 +305,11 @@ public class TimelineMBean extends AbstractControllerCadastro<Codigo> {
 				if (ValidatorUtil.isNotEmpty(codigos)){
 					int[] idsCodigos = CuboSocialUtils.persistDbToArray(codigos);
 					
-					Map<Integer, AvaliacaoCodigo> map = dao.findAvaliacoesCodigosByIdsCodigos(idsCodigos, getUsuarioLogado().getId());
+					Map<Codigo, AvaliacaoCodigo> map = dao.findAvaliacoesCodigosByIdsCodigos(idsCodigos, getUsuarioLogado().getId());
 					
 					if (map != null){
-						for (Integer id : map.keySet()){
-							Codigo c = new Codigo();
-							c.setId(id);
-							
-							AvaliacaoCodigo ava = map.get(id);
+						for (Codigo c : map.keySet()){
+							AvaliacaoCodigo ava = map.get(c);
 							
 							//Setando a nota que o usuário logado atribuiu à publicação em questão
 							codigos.get(codigos.indexOf(c)).setNotaUsuarioLogado(ava.getNota());;

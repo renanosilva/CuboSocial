@@ -101,7 +101,8 @@ public class VisualizarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 			
 			//Atualizando registro
 			
-			obj = dao.findByPrimaryKey(publicacaoBanco.getId(), Codigo.class);
+			//obj = dao.findByPrimaryKey(publicacaoBanco.getId(), Codigo.class);
+			dao.refresh(obj);
 			
 		} catch (ArqException e) {
 			tratamentoErroPadrao(e);
@@ -208,6 +209,7 @@ public class VisualizarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 	
 	private void recarregarPublicacaoCodigo(int idCodigo){
 		obj = dao.findByPrimaryKey(idCodigo, Codigo.class);
+		dao.refresh(obj);
 		obj.setComentarios(dao.findByExactField("publicacao.id", obj.getId(), "criadoEm ASC", Comentario.class));
 		
 		//Carregando avaliação do usuário logado para o código em questão

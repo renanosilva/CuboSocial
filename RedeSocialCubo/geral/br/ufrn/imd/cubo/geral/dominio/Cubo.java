@@ -61,6 +61,34 @@ public class Cubo implements PersistDB {
 			return false;
 		return true;
 	}
+	
+	public Boolean is2x2x2(){
+		if (nome == null)
+			return null;
+		
+		return nome.contains("2x2x2");
+	}
+	
+	public Boolean is3x3x3(){
+		if (nome == null)
+			return null;
+		
+		return nome.contains("3x3x3");
+	}
+	
+	public Boolean is4x4x4(){
+		if (nome == null)
+			return null;
+		
+		return nome.contains("4x4x4");
+	}
+	
+	public Boolean is5x5x5(){
+		if (nome == null)
+			return null;
+		
+		return nome.contains("5x5x5");
+	}
 
 	public int getId() {
 		return id;

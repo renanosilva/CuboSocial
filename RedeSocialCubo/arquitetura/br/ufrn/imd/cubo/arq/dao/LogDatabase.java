@@ -46,6 +46,13 @@ public class LogDatabase extends EmptyInterceptor {
 				dados.append(propertyNames[i].toString() + "=" + state[i] + ";");
 			}
 			log.setDados(dados.toString());
+			
+			try {
+				LogUtil.getInstance().inserirLog(log);
+			} catch (SQLException e) {
+				// TODO tratar isso.
+				e.printStackTrace();
+			}
 
 		}
 
@@ -75,6 +82,14 @@ public class LogDatabase extends EmptyInterceptor {
 				dados.append(propertyNames[i].toString() + "=" + state[i] + ";");
 			}
 			log.setDados(dados.toString());
+			
+			try {
+				
+				LogUtil.getInstance().inserirLog(log);
+			} catch (SQLException e) {
+				// TODO tratar isso.
+				e.printStackTrace();
+			}
 
 		}
 

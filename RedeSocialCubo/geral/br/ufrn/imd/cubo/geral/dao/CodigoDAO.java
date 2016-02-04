@@ -168,7 +168,7 @@ public class CodigoDAO extends GenericDAOImpl {
 	 * determinado usuário avaliou.
 	 */
 	@SuppressWarnings("unchecked")
-	public Map<Integer, AvaliacaoCodigo> findAvaliacoesCodigosByIdsCodigos(int[] idsCodigos, 
+	public Map<Codigo, AvaliacaoCodigo> findAvaliacoesCodigosByIdsCodigos(int[] idsCodigos, 
 			Integer idUsuario) throws DAOException{
 		
 		if (ValidatorUtil.isEmpty(idsCodigos))
@@ -179,7 +179,7 @@ public class CodigoDAO extends GenericDAOImpl {
 			
 			StringBuilder hql = new StringBuilder();
 			
-			hql.append(" SELECT c.id, av.nota ");
+			hql.append(" SELECT c.id, c.codigo, av.nota ");
 			hql.append(" FROM Codigo c, AvaliacaoCodigo av ");
 			hql.append(" WHERE ");
 			hql.append(" av.publicacao.id = c.id ");
@@ -190,17 +190,22 @@ public class CodigoDAO extends GenericDAOImpl {
 			q.setParameter("idUsuario", idUsuario);
 
 			List<Object[]> objects = q.getResultList();
-			Map<Integer, AvaliacaoCodigo> result = new HashMap<Integer, AvaliacaoCodigo>();
+			Map<Codigo, AvaliacaoCodigo> result = new HashMap<Codigo, AvaliacaoCodigo>();
 			
 			for (int i=0; i< objects.size(); i++) {
 				Object[] obj = objects.get(i);
 				
 				Integer idCodigo = (Integer) obj[0];
+				String codigo = (String) obj[1];
+				
+				Codigo c = new Codigo();
+				c.setId(idCodigo);
+				c.setCodigo(codigo);
 				
 				AvaliacaoCodigo ava = new AvaliacaoCodigo();
-				ava.setNota((Integer) obj[1]); 
+				ava.setNota((Integer) obj[2]); 
 				
-				result.put(idCodigo, ava);
+				result.put(c, ava);
 			}
 			
 			return result;

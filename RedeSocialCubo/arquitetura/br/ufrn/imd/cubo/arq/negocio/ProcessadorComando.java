@@ -57,8 +57,8 @@ public abstract class ProcessadorComando {
 			throw new ArqException(e);
 		} finally {
 			//Limpando caches
-			if (em != null)
-				em.clear();
+//			if (em != null)
+//				em.clear();
 		}
 	}
 	

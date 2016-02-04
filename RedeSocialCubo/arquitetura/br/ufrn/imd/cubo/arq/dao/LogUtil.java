@@ -15,6 +15,10 @@ public class LogUtil {
 	private String DBerro;
 	private Connection conn;
 
+	private LogUtil(){
+		
+	}
+	
 	private static LogUtil singleton = new LogUtil();
 
 	public static LogUtil getInstance() {
@@ -61,7 +65,7 @@ public class LogUtil {
 			ps.setInt(1, log.getIdEntidade());
 			ps.setString(2, log.getOperacao());
 			ps.setString(3, log.getEntidade());
-			ps.setDate(4, new java.sql.Date(log.getData().getTime()));
+			ps.setTimestamp(4, new java.sql.Timestamp(log.getData().getTime()));
 			ps.setString(5, log.getDados());
 			if (log.getIdUsuario() != null)
 				ps.setInt(6, log.getIdUsuario());

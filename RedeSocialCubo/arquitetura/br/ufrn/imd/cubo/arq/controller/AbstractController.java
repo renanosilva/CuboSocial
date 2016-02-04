@@ -6,6 +6,8 @@ import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -15,6 +17,8 @@ import org.primefaces.model.UploadedFile;
 import br.ufrn.imd.cubo.arq.dominio.Usuario;
 import br.ufrn.imd.cubo.arq.exception.ArqException;
 import br.ufrn.imd.cubo.arq.exception.NegocioException;
+import br.ufrn.imd.cubo.arq.helper.ExceptionHelper;
+import br.ufrn.imd.cubo.arq.helper.MailHelper;
 import br.ufrn.imd.cubo.arq.util.EnvioArquivoUtils;
 import br.ufrn.imd.cubo.arq.util.UsuarioUtil;
 import br.ufrn.imd.cubo.arq.util.ValidatorUtil;
@@ -48,8 +52,20 @@ public class AbstractController implements Serializable {
 	 */
 	protected void tratamentoErroPadrao(Exception e){
 		e.printStackTrace();
+		notificarErro(e);
 		addMsgError("Ocorreu um erro ao realizar a operação. Por favor, entre em contato com a "
 				+ "administração do sistema, ou tente novamente mais tarde.");
+	}
+	
+	/** Notifica a administração do sistema sobre a ocorrência de um erro. */
+	protected void notificarErro(Exception e){
+		try {
+			MailHelper.enviarEmail(MailHelper.EMAIL_SISTEMA, "Erro", ExceptionHelper.getStackTrace(e));
+		} catch (AddressException e1) {
+			e1.printStackTrace();
+		} catch (MessagingException e1) {
+			e1.printStackTrace();
+		}
 	}
 	
 	/**

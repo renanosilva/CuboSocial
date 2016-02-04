@@ -75,7 +75,7 @@ public class NovoCodigoMBean extends AbstractControllerCadastro<Codigo> {
 	
 	@Override
 	protected String posCadastro() {
-		return Paginas.PORTAL_INICIO;
+		return obj.isFinalizado() ? Paginas.PORTAL_INICIO : null;
 	}
 	
 	/** Carrega a URL de streaming do cubo, a partir do ID do cubo que o usuário selecionou. */
