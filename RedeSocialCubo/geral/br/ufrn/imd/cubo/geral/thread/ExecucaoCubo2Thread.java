@@ -1,7 +1,10 @@
 package br.ufrn.imd.cubo.geral.thread;
 
+import br.ufrn.imd.cubo.geral.dominio.Codigo;
+import br.ufrn.imd.cubo.geral.rest.ExecucaoREST;
+
 /**
- * Thread de execução do cubo 2x2.
+ * Thread de execuï¿½ï¿½o do cubo 2x2.
  * 
  * @author Renan
  */
@@ -19,11 +22,14 @@ public class ExecucaoCubo2Thread extends ExecucaoCodigoThread {
 			
 			//TODO: executar thread
 			
-			/* TODO: se houver sucesso, esperar 30s até executar a próxima; se não,
-			 * executar a próxima imediatamente. */
+			/* TODO: se houver sucesso, esperar 30s atï¿½ executar a prï¿½xima; se nï¿½o,
+			 * executar a prï¿½xima imediatamente. */
 			
 			try {
-				filaCodigos.peek();
+				Codigo c = filaCodigos.peek();
+				
+				ExecucaoREST.executarCodigo(c.getCodigo(), 2);
+				
 				sleep(TEMPO_MIN_EXECUCAO_CODIGO);
 				filaCodigos.poll();
 			} catch (InterruptedException e) {
