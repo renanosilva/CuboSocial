@@ -16,22 +16,7 @@ public class ExecucaoCubo4Thread extends ExecucaoCodigoThread {
 
 	@Override
 	public void run() {
-		while (!filaCodigos.isEmpty()) {
-			
-			//TODO: executar thread
-			
-			/* TODO: se houver sucesso, esperar 30s até executar a próxima; se não,
-			 * executar a próxima imediatamente. */
-			
-			try {
-				filaCodigos.peek();
-				sleep(TEMPO_MIN_EXECUCAO_CODIGO);
-				filaCodigos.poll();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		
+		executar(4);
 		reiniciarInstancia();
 	}
 	

@@ -10,7 +10,8 @@
 	template="/templates/template_autenticado.xhtml">
 
 	<ui:param name="opcaoAtiva" 
-		value="#{timelineMBean.timelineNormal ? menuPrincipalMBean.menuTimeline : menuPrincipalMBean.menuMeusCodigos}" />
+		value="#{timelineMBean.timelineNormal ? menuPrincipalMBean.menuTimeline : 
+			(timelineMBean.meusCodigos ? menuPrincipalMBean.menuMeusCodigos : menuPrincipalMBean.menuDemo)}" />
 	
 	<ui:define name="conteudo">
 		<!-- dotdotdot -->

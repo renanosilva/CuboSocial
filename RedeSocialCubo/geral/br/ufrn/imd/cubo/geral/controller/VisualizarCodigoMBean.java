@@ -126,7 +126,8 @@ public class VisualizarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 			
 			//Atualizando registro
 			
-			comentario = dao.findByPrimaryKey(comentario.getId(), Comentario.class);
+			//comentario = dao.findByPrimaryKey(comentario.getId(), Comentario.class);
+			dao.refresh(comentario);
 			obj.getComentarios().set(obj.getComentarios().indexOf(comentario), comentario);
 		} catch (ArqException e) {
 			tratamentoErroPadrao(e);

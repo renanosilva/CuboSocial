@@ -60,3 +60,13 @@ function resolverConflitoBootstrap(id){
 	$("#" + id).attr("class", $("#" + id).attr("class") + "form-control");
 	$("#" + id).css("width", "100%");
 }
+
+var scrollPos;
+
+function saveScrollPos() {
+	scrollPos = $(".divConsole").scrollTop();
+}
+
+function getScrollPos() {
+    $(".divConsole").scrollTop(scrollPos);
+}

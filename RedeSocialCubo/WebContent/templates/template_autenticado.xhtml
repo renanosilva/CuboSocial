@@ -12,9 +12,9 @@
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 	    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 	    
-		<c:set var="ctx" value="CuboSocial"/>
+		<c:set var="ctx" value="LEDNet"/>
 		
-		<title>Cubo Social</title>
+		<title>LED Net</title>
 		<link rel="shortcut icon" href="/${ctx}/resources/img/favicon.ico"/>
 		
 		<link rel="stylesheet" type="text/css" href="/${ctx}/resources/css/bootstrap.min.css" media="all"/>
@@ -51,7 +51,7 @@
 						<span class="icon-bar"></span>
 					</button>
 					<h:form>
-						<h:commandLink action="#{timelineMBean.inicio}" value="Cubo Social"
+						<h:commandLink action="#{timelineMBean.inicio}" value="LED Net"
 	            			styleClass="navbar-brand #{opcaoAtiva == menuPrincipalMBean.menuTimeline ? 'linkMenuTopo ativo' : ''}" />
 			        </h:form>
 				</div>
@@ -74,6 +74,10 @@
 			            		styleClass="linkMenuTopo #{opcaoAtiva == menuPrincipalMBean.menuVisualizarCubos ? 'ativo' : ''}"
 			            		action="#{visualizarCuboMBean.entrar}">
 			            	</h:commandLink>
+			            </li>
+			            <li>
+			            	<h:commandLink action="#{timelineMBean.entrarDemo}" value="Demo"
+			            		styleClass="linkMenuTopo #{opcaoAtiva == menuPrincipalMBean.menuDemo ? 'ativo' : ''}"/>
 			            </li>
 			          </ul>
 		          </h:form>
@@ -113,7 +117,10 @@
 			<ui:insert name="conteudo">
 				Conteúdo...
 			</ui:insert>
-			<p:growl life="30000" id="mensagens" />
+			
+			<h:panelGroup rendered="#{ocultarMensagens == null}">
+				<p:growl life="30000" id="mensagens" />
+			</h:panelGroup>
 		</div>
 	</h:body>
 </html>

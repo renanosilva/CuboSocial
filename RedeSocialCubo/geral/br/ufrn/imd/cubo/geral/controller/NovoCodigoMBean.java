@@ -73,9 +73,29 @@ public class NovoCodigoMBean extends AbstractControllerCadastro<Codigo> {
 		}
 	}
 	
+	public String executarCodigo(){
+		try {
+			salvar(obj.getId() == 0 ? true : !obj.isFinalizado());
+			
+			ExecutarCodigoMBean mBean = getMBean("executarCodigoMBean");
+			mBean.executarCodigo(obj.getId());
+			
+		} catch (Exception e) {
+			tratamentoErroPadrao(e);
+		} 
+		
+		return null;
+	}
+	
 	@Override
 	protected String posCadastro() {
-		return obj.isFinalizado() ? Paginas.PORTAL_INICIO : null;
+		if (obj.isFinalizado()){
+			TimelineMBean bean = getMBean("timelineMBean");
+			bean.setCodigos(null);
+			return Paginas.PORTAL_INICIO;
+		} else {
+			return null;
+		}
 	}
 	
 	/** Carrega a URL de streaming do cubo, a partir do ID do cubo que o usuário selecionou. */

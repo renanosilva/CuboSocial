@@ -60,6 +60,10 @@ public class Codigo extends PersistDBRecorded {
 	@Column(nullable = false)
 	private boolean finalizado;
 	
+	/** Indica se o código é para demonstração do sistema. Esses códigos
+	 * serão exibidos no caso de uso Demo. */
+	private Boolean demo;
+	
 	/** O usuário pode anexar um arquivo de imagem ao código */
 	@Column(name="id_foto")
 	private Integer idFoto;
@@ -349,5 +353,13 @@ public class Codigo extends PersistDBRecorded {
 	public void setCubo(Cubo cubo) {
 		this.cubo = cubo;
 	}
-	
+
+	public Boolean getDemo() {
+		return demo;
+	}
+
+	public void setDemo(Boolean demo) {
+		this.demo = demo;
+	}
+
 }

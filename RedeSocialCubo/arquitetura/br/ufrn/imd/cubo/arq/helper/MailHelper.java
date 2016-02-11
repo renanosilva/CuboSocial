@@ -52,45 +52,55 @@ public class MailHelper {
 	public static void enviarEmail(String destino, String titulo,
 			String mensagem) throws AddressException, MessagingException {
 		
-		// Parâmetros de conexão com servidor Gmail
-		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.socketFactory.port", "465");
-		props.put("mail.smtp.socketFactory.class",
-				"javax.net.ssl.SSLSocketFactory");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.port", "465");
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// Parâmetros de conexão com servidor Gmail
+				Properties props = new Properties();
+				props.put("mail.smtp.host", "smtp.gmail.com");
+				props.put("mail.smtp.socketFactory.port", "465");
+				props.put("mail.smtp.socketFactory.class",
+						"javax.net.ssl.SSLSocketFactory");
+				props.put("mail.smtp.auth", "true");
+				props.put("mail.smtp.port", "465");
 
-		Session session = Session.getDefaultInstance(props,
-				new javax.mail.Authenticator() {
-					protected PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(EMAIL_SISTEMA,
-								PASSWORD);
-					}
-				});
+				Session session = Session.getDefaultInstance(props,
+						new javax.mail.Authenticator() {
+							protected PasswordAuthentication getPasswordAuthentication() {
+								return new PasswordAuthentication(EMAIL_SISTEMA,
+										PASSWORD);
+							}
+						});
 
-		// Ativa Debug para sessão 
-		session.setDebug(true);
+				// Ativa Debug para sessão 
+				session.setDebug(true);
 
-		final Message message = new MimeMessage(session);
+				final Message message = new MimeMessage(session);
+				
+				try {
+					message.setFrom(new InternetAddress(EMAIL_SISTEMA, "Cubo Social"));
+					
+					Address[] toUser = InternetAddress // Destinatário(s)
+							.parse(destino);
+					
+					message.setRecipients(Message.RecipientType.TO, toUser);
+					message.setSubject(titulo);// Assunto
+					message.setContent(mensagem, "text/html; charset=UTF-8");
+					
+					Transport.send(message);
+					System.out.println("Email enviado...");
+				} catch (UnsupportedEncodingException e1) {
+					e1.printStackTrace();
+					return;
+				} catch (MessagingException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		});
 		
-		try {
-			message.setFrom(new InternetAddress(EMAIL_SISTEMA, "Cubo Social"));
-		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-			return;
-		}
-
-		Address[] toUser = InternetAddress // Destinatário(s)
-				.parse(destino);
-
-		message.setRecipients(Message.RecipientType.TO, toUser);
-		message.setSubject(titulo);// Assunto
-		message.setContent(mensagem, "text/html; charset=UTF-8");
+		t.start();
 		
-		Transport.send(message);
-		System.out.println("Email enviado...");
-
 	}
 
 }

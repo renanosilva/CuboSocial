@@ -34,6 +34,7 @@ public class VisualizarCuboMBean extends AbstractControllerCadastro<Cubo> {
 		
 		if (idCubo > 0){
 			obj = dao.findByPrimaryKey(idCubo, Cubo.class);
+			dao.detach(obj);
 		} else {
 			obj = new Cubo();
 		}

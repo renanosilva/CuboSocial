@@ -48,7 +48,7 @@
 					
 					<h:panelGroup rendered="#{visualizarCodigoMBean.obj != null and visualizarCodigoMBean.obj.id != 0}">
 				    	<h:form id="formCodigo" prependId="false" >
-						    <p:poll listener="#{executarCodigoMBean.atualizarTextoFilaEspera}" interval="30"
+						    <p:poll listener="#{executarCodigoMBean.atualizarTextoFilaEspera}" interval="15"
 						    	update="msgExecucao" />
 			    		
 							<h:panelGroup id="panelCodigos" rendered="#{visualizarCodigoMBean.obj.id != 0}">
@@ -173,7 +173,7 @@
 				</div>
 				
 				<div class="col-md-4">
-					<h:form>
+					<h:form prependId="false">
 				    	<div class="input-group">
 					    	<span class="input-group-addon" id="addonCuboStreaming">
 								Cubo
@@ -191,6 +191,19 @@
 							    <source src="#{visualizarCodigoMBean.obj.cubo.url}" type="video/ogg" />
 							</video>
 				    	</div>
+				    	
+				    	<p:poll update="panelConsole" interval="15"
+				    		onstart="saveScrollPos();" oncomplete="getScrollPos();"/>
+				    	
+				    	<h:panelGroup id="panelConsole">
+				    		<div class="divConsole">
+				    			<h3><b>Console</b></h3>
+				    			
+				    			<div style="white-space: pre-wrap;">
+				    				<h:outputText value="#{executarCodigoMBean.textoConsole}"/>
+				    			</div>
+				    		</div>
+				    	</h:panelGroup>
 			    	
 				    </h:form>
 				</div>
@@ -317,7 +330,7 @@
 			  $('pre code').each(function(i, block) {
 			    hljs.highlightBlock(block);
 			  });
-			});
+			});		  	
 	    </script>
 	    
 	</ui:define>

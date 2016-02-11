@@ -15,7 +15,7 @@ import br.ufrn.imd.cubo.arq.controller.AbstractController;
 public class MenuPrincipalMBean extends AbstractController {
 	
 	private enum ItemMenu {
-		TIMELINE, NOVO_CODIGO, MEUS_CODIGOS, VISUALIZAR_CUBOS, ALTERAR_PERFIL;
+		TIMELINE, NOVO_CODIGO, MEUS_CODIGOS, VISUALIZAR_CUBOS, ALTERAR_PERFIL, DEMO;
 	}
 	
 	public ItemMenu getMenuTimeline(){
@@ -36,6 +36,10 @@ public class MenuPrincipalMBean extends AbstractController {
 	
 	public ItemMenu getMenuAlterarPerfil(){
 		return ItemMenu.ALTERAR_PERFIL;
+	}
+	
+	public ItemMenu getMenuDemo(){
+		return ItemMenu.DEMO;
 	}
 	
 }

@@ -12,7 +12,7 @@ import br.ufrn.imd.cubo.arq.dominio.PersistDB;
 public class CuboSocialUtils {
 	
 	public static String getContext(){
-		return "CuboSocial";
+		return "LEDNet";
 	}
 	
 	public static String getContextBarras(){

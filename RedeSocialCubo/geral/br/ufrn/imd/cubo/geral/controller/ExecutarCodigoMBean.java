@@ -13,6 +13,7 @@ import br.ufrn.imd.cubo.arq.dao.GenericDAOImpl;
 import br.ufrn.imd.cubo.arq.exception.ArqException;
 import br.ufrn.imd.cubo.arq.exception.NegocioException;
 import br.ufrn.imd.cubo.geral.dominio.Codigo;
+import br.ufrn.imd.cubo.geral.dominio.ConsoleArduino;
 import br.ufrn.imd.cubo.geral.negocio.ProcessadorExecutarCodigo;
 import br.ufrn.imd.cubo.geral.thread.ExecucaoCodigoThread;
 import br.ufrn.imd.cubo.geral.util.ThreadExecucaoUtils;
@@ -43,6 +44,14 @@ public class ExecutarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 	 * */
 	public void executar(ActionEvent evt){
 		int idCodigo = getParameterInt("idCodigo", -1);
+		executarCodigo(idCodigo);
+	}
+	
+	public void executarCodigo(int idCodigo){
+		if (idCodigo == 0){
+			addMsgError("É necessário salvar o código antes de executá-lo.");
+			return;
+		}
 		
 		if (idCodigo != -1){
 			obj = dao.findByPrimaryKey(idCodigo, Codigo.class);
@@ -103,6 +112,10 @@ public class ExecutarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 			
 			addMsgInfo(msg);
 		}
+	}
+	
+	public String getTextoConsole(){
+		return ConsoleArduino.getInstance().getTextoConsole();
 	}
 	
 }

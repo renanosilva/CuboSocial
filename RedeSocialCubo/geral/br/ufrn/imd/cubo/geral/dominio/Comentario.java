@@ -2,6 +2,7 @@ package br.ufrn.imd.cubo.geral.dominio;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -55,7 +56,7 @@ public class Comentario extends PersistDBRecorded {
 	private int qtdCurtidas;
 	
 	/** Curtidas que o comentário recebeu. */
-	@OneToMany(mappedBy = "comentario", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "comentario", fetch = FetchType.LAZY, cascade=CascadeType.REMOVE)
 	private List<Curtida> curtidas;
 	
 	@Override
