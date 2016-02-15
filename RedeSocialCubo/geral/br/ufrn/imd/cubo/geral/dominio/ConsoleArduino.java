@@ -1,5 +1,9 @@
 package br.ufrn.imd.cubo.geral.dominio;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Singleton que armazenará o console de execução do arduino.
  *  
@@ -13,6 +17,8 @@ public class ConsoleArduino {
 	private String console;
 	
 	private static ConsoleArduino instance;
+	
+	private List<ExecucaoCodigo> listaExecucao = Collections.synchronizedList(new ArrayList<ExecucaoCodigo>());
 	
 	private ConsoleArduino() {
 		console = "";
@@ -46,6 +52,23 @@ public class ConsoleArduino {
 	
 	public String getTextoConsole(){
 		return console;
+	}
+
+	public ExecucaoCodigo getExecucao(ExecucaoCodigo e) {
+		int idx = listaExecucao.indexOf(e);
+		return idx != -1 ? listaExecucao.get(idx) : null; 
+	}
+	
+	public void addExecucao(ExecucaoCodigo e){
+		synchronized (listaExecucao) {
+			listaExecucao.add(e);
+		}
+	}
+	
+	public void removerExecucao(ExecucaoCodigo e){
+		synchronized (listaExecucao) {
+			listaExecucao.remove(e);
+		}
 	}
 
 }

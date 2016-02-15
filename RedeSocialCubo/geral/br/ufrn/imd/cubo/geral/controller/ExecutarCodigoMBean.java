@@ -1,5 +1,6 @@
 package br.ufrn.imd.cubo.geral.controller;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Queue;
 
@@ -14,6 +15,7 @@ import br.ufrn.imd.cubo.arq.exception.ArqException;
 import br.ufrn.imd.cubo.arq.exception.NegocioException;
 import br.ufrn.imd.cubo.geral.dominio.Codigo;
 import br.ufrn.imd.cubo.geral.dominio.ConsoleArduino;
+import br.ufrn.imd.cubo.geral.dominio.ExecucaoCodigo;
 import br.ufrn.imd.cubo.geral.negocio.ProcessadorExecutarCodigo;
 import br.ufrn.imd.cubo.geral.thread.ExecucaoCodigoThread;
 import br.ufrn.imd.cubo.geral.util.ThreadExecucaoUtils;
@@ -29,13 +31,16 @@ import br.ufrn.imd.cubo.geral.util.ThreadExecucaoUtils;
 public class ExecutarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 	
 	/** Indica se deve exibir o status da fila de execução de códigos. */
-	boolean exibirStatusExecucao;
+	private boolean exibirStatusExecucao;
+	
+	private String textoConsole;
 	
 	@PostConstruct
 	private void init() {
 		obj = new Codigo();
 		dao = new GenericDAOImpl();
 		exibirStatusExecucao = false;
+		textoConsole = "";
 	}
 	
 	/** 
@@ -55,6 +60,13 @@ public class ExecutarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 		
 		if (idCodigo != -1){
 			obj = dao.findByPrimaryKey(idCodigo, Codigo.class);
+			
+			ExecucaoCodigo exec = new ExecucaoCodigo();
+			exec.setCodigo(obj);
+			exec.setDataHora(new Date());
+			exec.setUsuarioExecucao(getUsuarioLogado());
+			
+			obj.setExecucao(exec);
 			
 			try {
 				ProcessadorExecutarCodigo p = new ProcessadorExecutarCodigo();
@@ -115,7 +127,25 @@ public class ExecutarCodigoMBean extends AbstractControllerCadastro<Codigo> {
 	}
 	
 	public String getTextoConsole(){
-		return ConsoleArduino.getInstance().getTextoConsole();
+//		String console = ConsoleArduino.getInstance().getTextoConsole();
+//		int idxInicio = console.lastIndexOf("EXECUTANDO CODIGO: " + obj.getId());
+//		int idxFim = console.lastIndexOf("TERMINADA EXECUÇÃO DE: " + obj.getId());
+//		
+//		if (idxInicio == -1){
+//			return "";
+//		} else {
+//			String texto = console.substring(idxInicio, idxFim);
+//			return texto;
+//		}
+		
+		ExecucaoCodigo exec = ConsoleArduino.getInstance().getExecucao(obj.getExecucao());
+		
+		if (exec != null){
+			textoConsole = exec.getResultado();
+			ConsoleArduino.getInstance().removerExecucao(exec);
+		}
+		
+		return textoConsole;
 	}
 	
 }

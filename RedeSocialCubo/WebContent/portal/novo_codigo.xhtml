@@ -108,15 +108,15 @@
 					<div class="col-md-4">
 				    	<div class="input-group">
 							<span class="input-group-addon" id="addonCubo">
-								Cubo
+								Dispositivo
 								<h:graphicImage url="/resources/img/required.gif" title="Campo Obrigatório"/>
 							</span>
 							
 							<h:selectOneMenu styleClass="form-control"
-								required="true" requiredMessage="Campo Cubo Obrigatório"
+								required="true" requiredMessage="Campo Dispositivo Obrigatório"
 								value="#{novoCodigoMBean.obj.cubo.id}">
-								<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE O CUBO--"
-									itemDescription="--SELECIONE O CUBO--" />
+								<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE O DISPOSITIVO--"
+									itemDescription="--SELECIONE O DISPOSITIVO--" />
 								<f:selectItems value="#{cuboMBean.selectCubos}" />
 								
 								<p:ajax event="change" listener="#{novoCodigoMBean.carregarUrlStreaming}" update="panelStreaming"/>

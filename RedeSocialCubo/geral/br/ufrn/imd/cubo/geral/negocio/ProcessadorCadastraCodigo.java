@@ -64,10 +64,12 @@ public class ProcessadorCadastraCodigo extends ProcessadorCadastro {
 						obj.getArquivoVideo().getContents());
 			}
 			
-			//Evitando erros de lazy
+			//Evitando erros de lazy e atualizando cubo
 			IGenericDAO dao = new GenericDAOImpl();
+			
+			int idCubo = obj.getCubo().getId();
 			dao.detach(obj.getCubo());
-			obj.setCubo(dao.findByPrimaryKey(obj.getCubo().getId(), Cubo.class));
+			obj.setCubo(dao.findByPrimaryKey(idCubo, Cubo.class));
 			
 			super.iniciarExecucao();
 			

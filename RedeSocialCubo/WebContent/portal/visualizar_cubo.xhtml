@@ -14,7 +14,7 @@
 		<div class="jumbotron jumbotron-medio">
 	      <div class="container">
 	        <h1>
-	        	Visualizar Cubos
+	        	Visualizar Dispositivos
 	        </h1>
 	      </div>
 	    </div>
@@ -26,13 +26,13 @@
 					<div class="col-md-12">
 				    	<div class="input-group" style="width: 70%; margin: auto;">
 							<span class="input-group-addon" id="addonCubo">
-								Cubo
+								Dispositivo
 							</span>
 							
 							<h:selectOneMenu styleClass="form-control"
 								value="#{visualizarCuboMBean.obj.id}">
-								<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE O CUBO--"
-									itemDescription="--SELECIONE O CUBO--" />
+								<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE O DISPOSITIVO--"
+									itemDescription="--SELECIONE O DISPOSITIVO--" />
 								<f:selectItems value="#{cuboMBean.selectCubos}" />
 								
 								<p:ajax event="change" listener="#{visualizarCuboMBean.carregarUrlStreaming}" update="panelStreaming"/>

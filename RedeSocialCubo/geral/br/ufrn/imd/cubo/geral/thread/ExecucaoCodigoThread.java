@@ -35,17 +35,27 @@ public abstract class ExecucaoCodigoThread extends Thread {
 		while (!filaCodigos.isEmpty()) {
 			
 			Codigo c = new Codigo();
+			String resultado = "";
 			
 			try {
 				c = filaCodigos.peek();
 				
-				System.out.println("EXECUTANDO CODIGO: " + c.getTitulo());
-				String resultado = ExecucaoREST.executarCodigo(c.getCodigo(), idCubo);
+				System.out.println("EXECUTANDO CODIGO: " + c.getId() + " - " +  c.getTitulo());
+				resultado = ExecucaoREST.executarCodigo(c.getCodigo(), idCubo);
 				System.out.println(resultado);
+				System.out.println("TERMINADA EXECUÇÃO DE: " + c.getId() + " " +  c.getTitulo());
 				
-				ConsoleArduino.getInstance().adicionarTexto("\n\n" + 
-						Formatador.getInstance().formatarDataHora(new Date()) + 
-						": EXECUTANDO CODIGO: " + c.getTitulo() + "\n" + resultado);
+//				ConsoleArduino.getInstance().adicionarTexto("\n\n" + 
+//						Formatador.getInstance().formatarDataHora(new Date()) + 
+//						": EXECUTANDO CODIGO: " + c.getId() + " - " + c.getTitulo() + "\n" + 
+//						resultado + "\n" +
+//						"TERMINADA EXECUÇÃO DE: " + c.getId() + " " +  c.getTitulo());
+				
+				c.getExecucao().setResultado(Formatador.getInstance().formatarDataHora(new Date()) + 
+						": EXECUTANDO CODIGO: " + c.getTitulo() + "\n" + 
+						resultado + "\n");
+				
+				ConsoleArduino.getInstance().addExecucao(c.getExecucao());
 				
 				if (!possuiErro(resultado)){
 					sleep(TEMPO_MIN_EXECUCAO_CODIGO);
@@ -53,14 +63,23 @@ public abstract class ExecucaoCodigoThread extends Thread {
 				
 			} catch (InterruptedException e) {
 				e.printStackTrace();
-				ConsoleArduino.getInstance().adicionarTexto(Formatador.getInstance().formatarDataHora(new Date()) + 
-						": ERRO ao executar código: " + c.getTitulo() + ". Ocorreu um erro de sistema. "
-						+ "Por favor, entre em contato com a administração.");
+//				ConsoleArduino.getInstance().adicionarTexto(Formatador.getInstance().formatarDataHora(new Date()) + 
+//						": TERMINADA EXECUÇÃO DE: " + c.getId() + " " +  c.getTitulo() + ". Ocorreu um erro de sistema. "
+//						+ "Por favor, entre em contato com a administração.");
+				
+				c.getExecucao().setResultado(Formatador.getInstance().formatarDataHora(new Date()) + 
+						": Ocorreu um erro de sistema. Por favor, entre em contato com a administração.");
+				ConsoleArduino.getInstance().addExecucao(c.getExecucao());
+				
 			} catch (Exception e){
 				e.printStackTrace();
-				ConsoleArduino.getInstance().adicionarTexto(Formatador.getInstance().formatarDataHora(new Date()) + 
-						": ERRO ao executar código: " + c.getTitulo() + ". Ocorreu um erro de sistema. "
-						+ "Por favor, entre em contato com a administração.");
+//				ConsoleArduino.getInstance().adicionarTexto("EXECUTANDO CODIGO: " + c.getId() + " - " +  c.getTitulo() + " ");
+//				ConsoleArduino.getInstance().adicionarTexto(Formatador.getInstance().formatarDataHora(new Date()) + 
+//						": Ocorreu um erro de sistema. Por favor, entre em contato com a administração. " +
+//						"TERMINADA EXECUÇÃO DE: " + c.getId() + " " +  c.getTitulo());
+				c.getExecucao().setResultado(Formatador.getInstance().formatarDataHora(new Date()) + 
+						": Ocorreu um erro de sistema. Por favor, entre em contato com a administração.");
+				ConsoleArduino.getInstance().addExecucao(c.getExecucao());
 			} finally {
 				filaCodigos.poll();
 			}

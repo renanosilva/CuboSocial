@@ -82,7 +82,7 @@ public class Codigo extends PersistDBRecorded {
 	
 	/** Refere-se ao cubo para o qual o código foi projetado. */
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="id_cubo", nullable=false)
+	@JoinColumn(name="id_cubo", nullable=false, updatable=true)
 	private Cubo cubo;
 	
 	/** Curtidas que a publicação recebeu. */
@@ -107,6 +107,9 @@ public class Codigo extends PersistDBRecorded {
 	 * */
 	@Transient
 	private UploadedFile arquivoFoto;
+	
+	@Transient
+	private ExecucaoCodigo execucao;
 	
 	/** 
 	 * Atributo não persisitido que armazena um vídeo que o usuário deseja
@@ -360,6 +363,14 @@ public class Codigo extends PersistDBRecorded {
 
 	public void setDemo(Boolean demo) {
 		this.demo = demo;
+	}
+
+	public ExecucaoCodigo getExecucao() {
+		return execucao;
+	}
+
+	public void setExecucao(ExecucaoCodigo execucao) {
+		this.execucao = execucao;
 	}
 
 }

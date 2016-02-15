@@ -48,7 +48,7 @@
 						
 						<div class="col-md-3">
 							<div class="input-group">
-								<span class="input-group-addon" id="addonFiltrarTipoCubo">Tipo de Cubo</span>
+								<span class="input-group-addon" id="addonFiltrarTipoCubo">Tipo de Dispositivo</span>
 					
 								<h:selectOneMenu value="#{timelineMBean.idTipoCubo}"
 									styleClass="form-control" aria-describedby="addonFiltrarTipoCubo">
@@ -135,13 +135,13 @@
 					<div class="form-group row">
 						<div class="col-md-5">
 							<div class="input-group">
-								<span class="input-group-addon" id="addonFiltrarTipoCubo">Tipo de Cubo</span>
+								<span class="input-group-addon" id="addonFiltrarTipoCubo">Tipo de Dispositivo</span>
 					
 								<h:selectOneMenu value="#{timelineMBean.idTipoCubo}" id="tipoCubo"
 									styleClass="form-control" aria-describedby="addonFiltrarTipoCubo">
 									
-									<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE O CUBO--"
-										itemDescription="--SELECIONE O CUBO--" />
+									<f:selectItem itemValue="#{null}" itemLabel="--SELECIONE O DISPOSITIVO--"
+										itemDescription="--SELECIONE O DISPOSITIVO--" />
 									<f:selectItems value="#{cuboMBean.selectCubos}" />
 								</h:selectOneMenu>
 							</div>

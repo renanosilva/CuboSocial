@@ -36,6 +36,7 @@ public class NovoCodigoMBean extends AbstractControllerCadastro<Codigo> {
 	
 	/** Entra na tela de novo código. */
 	public String entrar(){
+		init();
 		return Paginas.NOVO_CODIGO;
 	}
 	
